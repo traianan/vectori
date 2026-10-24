@@ -1,6 +1,6 @@
 /* Service worker — Calcul vectorial (lecție offline)
    Schimbă VERSION la fiecare publicare pentru a reîmprospăta cache-ul. */
-const VERSION = 'cv-v1';
+const VERSION = 'cv-v2';
 const PRECACHE = [
   './',
   './index.html',

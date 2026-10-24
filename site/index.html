@@ -213,7 +213,7 @@ footer a{color:var(--muted)}
   .recap td,.recap th{padding:10px}
 }
 .toast{position:fixed;left:50%;bottom:24px;z-index:60;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#1a1d26;color:#f4efe4;font:500 14px/1.4 'JetBrains Mono',monospace;padding:12px 18px;border-radius:999px;box-shadow:0 10px 30px rgba(26,29,38,.25);transition:opacity .4s,transform .4s}
-.btn[hidden]{display:none}
+.btn[hidden],.dl-link[hidden]{display:none}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
 </style>
@@ -245,6 +245,7 @@ footer a{color:var(--muted)}
       <a class="btn primary big" href="#s1"><svg class="i"><use href="#i-down"/></svg>Începe lecția</a>
       <a class="btn big" href="#s11">Calculator vectorial</a>
       <a class="btn big" href="#s13">Testează-te</a>
+      <a class="btn big dl-link" href="./calcul-vectorial.zip" download><svg class="i"><use href="#i-down"/></svg>Descarcă lecția</a>
       <button class="btn big" id="installBtn" type="button" hidden><svg class="i"><use href="#i-down"/></svg>Instalează aplicația</button>
     </div>
     <div class="hero-meta">
@@ -744,8 +745,9 @@ footer a{color:var(--muted)}
 
 <!-- ================= 14 ================= -->
 <section class="sec" id="s14" style="border-bottom:0">
-  <div class="sec-head rv"><div class="num">14</div><div><div class="kicker">Pentru aprofundare</div><h2>Resurse <em>externe</em></h2></div></div>
+  <div class="sec-head rv"><div class="num">14</div><div><div class="kicker">Pentru aprofundare</div><h2>Resurse <em>și descărcare</em></h2></div></div>
   <div class="links rv">
+    <a class="dl-link" href="./calcul-vectorial.zip" download><small>Descărcare · ZIP ≈ 1,3 MB</small><strong>Descarcă lecția <svg class="i"><use href="#i-down"/></svg></strong><p>Toată lecția pentru calculator sau stick: dezarhivează și deschide <code>index.html</code> — funcționează fără internet.</p></a>
     <a href="https://phet.colorado.edu/ro/simulations/vector-addition" target="_blank" rel="noopener"><small>Simulare · PhET Colorado</small><strong>Adunarea vectorilor <svg class="i"><use href="#i-ext"/></svg></strong><p>Simularea clasică a Universității Colorado, disponibilă în limba română.</p></a>
     <a href="https://ro.wikipedia.org/wiki/Vector" target="_blank" rel="noopener"><small>Enciclopedie · Wikipedia</small><strong>Vector <svg class="i"><use href="#i-ext"/></svg></strong><p>Definiția riguroasă și istoria noțiunii de vector.</p></a>
     <a href="https://ro.wikipedia.org/wiki/Produs_scalar" target="_blank" rel="noopener"><small>Enciclopedie · Wikipedia</small><strong>Produs scalar <svg class="i"><use href="#i-ext"/></svg></strong><p>Proprietăți, interpretare geometrică și generalizări.</p></a>
@@ -1351,6 +1353,7 @@ document.fonts&&document.fonts.ready.then(()=>ALL.forEach(x=>x.render()));
       navigator.serviceWorker.ready.then(()=>{if(!localStorage.getItem('cv-offline')){localStorage.setItem('cv-offline','1');toast('✓ Lecția este salvată și funcționează offline')}});
     }).catch(()=>{});
   }
+  if(location.protocol==='file:')document.querySelectorAll('.dl-link').forEach(a=>a.hidden=true);
   addEventListener('offline',()=>toast('Ești offline — lecția funcționează în continuare'));
   const btn=document.getElementById('installBtn');let deferred=null;
   addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;btn.hidden=false});
