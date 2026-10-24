@@ -5,12 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calcul vectorial — Lecție interactivă de fizică</title>
 <meta name="description" content="Lecție interactivă de fizică: mărimi vectoriale, componente, adunare, scădere, înmulțire cu un scalar, descompunere, produs scalar, produs vectorial și produs mixt.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<meta name="theme-color" content="#1a1d26">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="./icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Calcul vectorial">
+<!-- Fonturi și KaTeX locale (funcționează complet offline) -->
+<link rel="stylesheet" href="./vendor/fonts/fonts.css">
+<link rel="stylesheet" href="./vendor/katex/katex.min.css">
+<script defer src="./vendor/katex/katex.min.js"></script>
+<script defer src="./vendor/katex/contrib/auto-render.min.js"></script>
 <style>
 :root{
   --paper:#f4efe4; --paper-2:#ebe3d1; --card:#fbf8f1; --ink:#1a1d26; --ink-2:#3a3d47; --muted:#6f6a5f; --rule:#d9cfba;
@@ -205,6 +212,9 @@ footer a{color:var(--muted)}
   .ro{grid-template-columns:repeat(2,minmax(0,1fr))}
   .recap td,.recap th{padding:10px}
 }
+.toast{position:fixed;left:50%;bottom:24px;z-index:60;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#1a1d26;color:#f4efe4;font:500 14px/1.4 'JetBrains Mono',monospace;padding:12px 18px;border-radius:999px;box-shadow:0 10px 30px rgba(26,29,38,.25);transition:opacity .4s,transform .4s}
+.btn[hidden]{display:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
 </style>
 </head>
@@ -235,6 +245,7 @@ footer a{color:var(--muted)}
       <a class="btn primary big" href="#s1"><svg class="i"><use href="#i-down"/></svg>Începe lecția</a>
       <a class="btn big" href="#s11">Calculator vectorial</a>
       <a class="btn big" href="#s13">Testează-te</a>
+      <button class="btn big" id="installBtn" type="button" hidden><svg class="i"><use href="#i-down"/></svg>Instalează aplicația</button>
     </div>
     <div class="hero-meta">
       <div><b>10</b><span>operații</span></div>
@@ -1330,6 +1341,22 @@ function setSlider(root,key,val,label){const i=root.querySelector(`[data-s="${ke
 /* KaTeX + re-desenare după încărcarea fonturilor */
 addEventListener('load',()=>{if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});ALL.forEach(x=>x.resize())});
 document.fonts&&document.fonts.ready.then(()=>ALL.forEach(x=>x.render()));
+
+/* PWA: service worker (offline) + instalare */
+(()=>{
+  const toast=msg=>{let t=document.querySelector('.toast');if(!t){t=document.createElement('div');t.className='toast';t.setAttribute('role','status');document.body.appendChild(t)}
+    t.textContent=msg;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),3800)};
+  if('serviceWorker' in navigator&&location.protocol!=='file:'){
+    navigator.serviceWorker.register('./sw.js').then(reg=>{
+      navigator.serviceWorker.ready.then(()=>{if(!localStorage.getItem('cv-offline')){localStorage.setItem('cv-offline','1');toast('✓ Lecția este salvată și funcționează offline')}});
+    }).catch(()=>{});
+  }
+  addEventListener('offline',()=>toast('Ești offline — lecția funcționează în continuare'));
+  const btn=document.getElementById('installBtn');let deferred=null;
+  addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;btn.hidden=false});
+  btn.addEventListener('click',async()=>{if(!deferred)return;deferred.prompt();await deferred.userChoice;deferred=null;btn.hidden=true});
+  addEventListener('appinstalled',()=>{btn.hidden=true;toast('✓ Aplicația a fost instalată')});
+})();
 </script>
 </body>
 </html>
