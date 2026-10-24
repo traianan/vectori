@@ -1,96 +1,1335 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenKBS Project</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .container {
-            background: white;
-            padding: 3rem;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            text-align: center;
-            max-width: 500px;
-        }
-        h1 { color: #333; margin-bottom: 1rem; }
-        p { color: #666; margin-bottom: 2rem; line-height: 1.6; }
-        .btn {
-            display: inline-block;
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calcul vectorial — Lecție interactivă de fizică</title>
+<meta name="description" content="Lecție interactivă de fizică: mărimi vectoriale, componente, adunare, scădere, înmulțire cu un scalar, descompunere, produs scalar, produs vectorial și produs mixt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --paper:#f4efe4; --paper-2:#ebe3d1; --card:#fbf8f1; --ink:#1a1d26; --ink-2:#3a3d47; --muted:#6f6a5f; --rule:#d9cfba;
+  --a:#c8402a; --b:#1f5a8a; --c:#2e7d57; --o:#b07a12; --plum:#7b3f61; --teal:#2a7f86;
+  --display:"Fraunces", Georgia, serif; --body:"Source Serif 4", Georgia, serif; --mono:"JetBrains Mono", ui-monospace, monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.38;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.2 0 0 0 .14 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+::selection{background:rgba(200,64,42,.2)}
+a{color:var(--b);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:var(--a)}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--a);z-index:200;width:0;transition:width .1s linear}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;border-bottom:1px solid var(--rule)}
+#heroField{position:absolute;inset:0;width:100%;height:100%}
+.hero-inner{position:relative;z-index:2;max-width:1320px;width:100%;margin:0 auto;padding:80px 48px}
+.eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:flex;gap:14px;align-items:center}
+.eyebrow::before{content:"";width:42px;height:1px;background:var(--a)}
+.hero h1{font-family:var(--display);font-weight:300;font-size:clamp(64px,11vw,168px);line-height:.88;letter-spacing:-.035em;margin:28px 0 30px;font-variation-settings:"opsz" 144}
+.hero h1 em{font-style:italic;font-weight:500;color:var(--a);display:block;padding-left:.5em}
+.hero .lede{max-width:540px;font-size:21px;color:var(--ink-2);line-height:1.55}
+.hero-cta{display:flex;gap:14px;margin-top:40px;flex-wrap:wrap}
+.hero-meta{display:flex;gap:40px;margin-top:64px;flex-wrap:wrap}
+.hero-meta div{border-top:1px solid var(--ink);padding-top:10px;min-width:120px}
+.hero-meta b{display:block;font-family:var(--display);font-size:38px;font-weight:400;line-height:1}
+.hero-meta span{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.hero-caption{position:absolute;right:48px;bottom:32px;z-index:2;background:rgba(244,239,228,.88);padding:10px 14px;border-left:2px solid var(--a);font-family:var(--mono);font-size:11.5px;color:var(--muted);text-align:right;max-width:300px;line-height:1.5}
+.hero-caption b{color:var(--a)}
+.hero > *{animation:rise 1s cubic-bezier(.2,.7,.2,1) both}
+.hero .eyebrow{animation:rise .9s .1s both}.hero h1{animation:rise 1s .2s both}.hero .lede{animation:rise 1s .35s both}.hero-cta{animation:rise 1s .5s both}.hero-meta{animation:rise 1s .65s both}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+
+/* ---------- Buttons ---------- */
+.btn{font-family:var(--body);font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1.4px solid var(--ink);background:transparent;color:var(--ink);border-radius:999px;cursor:pointer;text-decoration:none;transition:background .2s,color .2s,transform .15s,box-shadow .2s;white-space:nowrap}
+.btn:hover{background:var(--ink);color:var(--paper);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.primary:hover{background:var(--a);border-color:var(--a)}
+.btn.big{font-size:17px;padding:13px 24px}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.sm{font-size:13.5px;padding:6px 12px}
+.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* ---------- Layout ---------- */
+.layout{max-width:1440px;margin:0 auto;display:grid;grid-template-columns:230px minmax(0,1fr);gap:0 56px;padding:0 48px}
+nav.toc{position:sticky;top:0;align-self:start;height:100vh;padding:56px 0 32px;display:flex;flex-direction:column}
+.toc h4{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;font-weight:400}
+.toc ol{list-style:none;border-left:1px solid var(--rule)}
+.toc a{display:flex;gap:12px;padding:6px 0 6px 16px;color:var(--ink-2);text-decoration:none;font-size:15px;line-height:1.3;position:relative;transition:color .2s}
+.toc a span{font-family:var(--mono);font-size:11px;color:var(--muted);padding-top:3px;min-width:18px}
+.toc a::before{content:"";position:absolute;left:-1.5px;top:6px;bottom:6px;width:2px;background:var(--a);transform:scaleY(0);transition:transform .3s}
+.toc a:hover{color:var(--a)}
+.toc a.active{color:var(--ink);font-weight:600}
+.toc a.active::before{transform:scaleY(1)}
+.toc .foot{margin-top:auto;font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.6}
+main{min-width:0}
+
+.sec{padding:110px 0 90px;border-bottom:1px solid var(--rule)}
+.sec-head{display:grid;grid-template-columns:150px minmax(0,1fr);align-items:end;margin-bottom:48px}
+.num{font-family:var(--display);font-style:italic;font-weight:300;font-size:104px;line-height:.8;color:var(--a);font-variation-settings:"opsz" 144}
+.sec-head .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.sec h2{font-family:var(--display);font-weight:400;font-size:clamp(34px,4vw,54px);line-height:1.02;letter-spacing:-.02em;margin-top:6px;font-variation-settings:"opsz" 96}
+.sec h2 em{font-style:italic;color:var(--b)}
+.cols{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:56px;align-items:start}
+.cols.flip{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
+.cols.flip .text{order:2}
+.text p{margin-bottom:1.05em}
+.text h3{font-family:var(--display);font-weight:500;font-size:24px;margin:1.6em 0 .5em;letter-spacing:-.01em}
+.text ul,.text ol{margin:0 0 1.1em 1.2em}
+.text li{margin-bottom:.35em}
+.text li::marker{color:var(--a)}
+.lead{font-size:21px;line-height:1.55;color:var(--ink-2)}
+.box{border:1px solid var(--rule);background:var(--card);padding:18px 22px;margin:1.3em 0;position:relative}
+.box .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;position:absolute;top:-9px;left:16px;background:var(--paper);padding:0 8px;color:var(--b)}
+.box.def{border-left:3px solid var(--b)}
+.box.app{border-left:3px solid var(--c)}.box.app .tag{color:var(--c)}
+.box.warn{border-left:3px solid var(--o)}.box.warn .tag{color:var(--o)}
+.box p:last-child{margin-bottom:0}
+.katex{font-size:1.06em}
+.katex-display{margin:.8em 0;overflow-x:auto;overflow-y:hidden;padding:4px 0}
+.vec{position:relative;display:inline-block;font-style:italic;line-height:1;padding-top:.22em}
+.vec::before{content:"";position:absolute;left:.04em;right:-.08em;top:.06em;border-top:.075em solid currentColor}
+.vec::after{content:"";position:absolute;right:-.09em;top:-.025em;width:.2em;height:.2em;border-top:.075em solid currentColor;border-right:.075em solid currentColor;transform:rotate(45deg)}
+
+/* ---------- Figures ---------- */
+.fig{position:sticky;top:28px;background:var(--card);border:1px solid var(--rule);box-shadow:0 1px 0 rgba(0,0,0,.03),0 24px 50px -30px rgba(40,30,10,.35)}
+.fig-h{display:flex;justify-content:space-between;align-items:baseline;padding:12px 18px;border-bottom:1px solid var(--rule);gap:12px}
+.fig-h b{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+.fig-h span{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:right}
+.fig canvas{display:block;width:100%;height:430px;touch-action:none}
+.fig canvas.h3d{height:470px}
+.fig canvas.mini{height:130px;border-top:1px dashed var(--rule)}
+.ctrls{display:flex;flex-wrap:wrap;gap:8px;padding:14px 18px;border-top:1px solid var(--rule)}
+.sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 22px;padding:14px 18px;border-top:1px solid var(--rule)}
+.sl{display:grid;grid-template-columns:auto 1fr 64px;align-items:center;gap:10px;font-size:15px}
+.sl span{font-style:italic;font-weight:600}
+.sl output{font-family:var(--mono);font-size:13px;text-align:right}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:var(--ink);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--card);border:2px solid var(--a);transition:transform .15s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--card);border:2px solid var(--a)}
+.ro{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--rule);background:linear-gradient(var(--paper),var(--card))}
+.ro div{padding:11px 18px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);min-width:0}
+.ro dt{font-size:13px;color:var(--muted);font-style:italic}
+.ro dd{font-family:var(--mono);font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ro .wide{grid-column:1/-1}
+.ro .w2{grid-column:span 2}
+.ro dd.txt{font-family:var(--body);font-weight:600;white-space:normal;font-size:15.5px}
+.hint{font-family:var(--mono);font-size:11px;color:var(--muted);padding:9px 18px;border-top:1px solid var(--rule);display:flex;gap:8px;align-items:center}
+.hint::before{content:"";width:8px;height:8px;border-radius:50%;border:2px solid var(--a);flex:none}
+
+/* ---------- Calculator ---------- */
+.calc{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px;align-items:start}
+.calc-in{background:var(--card);border:1px solid var(--rule);padding:22px}
+.vrow{display:grid;grid-template-columns:44px repeat(3,1fr);gap:8px;align-items:center;margin-bottom:10px}
+.vrow label{font-size:22px;font-weight:600;color:var(--ink)}
+.vrow input,.krow input{width:100%;font-family:var(--mono);font-size:15px;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:2px}
+.vrow input:focus,.krow input:focus{outline:2px solid var(--a);outline-offset:-1px;background:#fff}
+.vrow .hd{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center}
+.krow{display:grid;grid-template-columns:44px 1fr;gap:8px;align-items:center;margin-top:14px}
+.calc-out{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--rule);margin-top:18px}
+.calc-out div{padding:10px 4px;border-bottom:1px solid var(--rule)}
+.calc-out dt{font-size:14px;color:var(--muted)}
+.calc-out dd{font-family:var(--mono);font-size:14px;font-weight:600}
+.calc-out .full{grid-column:1/-1}
+
+/* ---------- Recap ---------- */
+.recap{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--rule)}
+.recap th{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;text-align:left;color:var(--muted);font-weight:400;padding:12px 18px;border-bottom:1px solid var(--ink)}
+.recap td{padding:14px 18px;border-bottom:1px solid var(--rule);vertical-align:middle;font-size:16.5px}
+.recap td:first-child{font-family:var(--display);font-size:19px;font-weight:500}
+.recap td a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}.recap td a:hover{color:var(--a);border-color:var(--a)}
+.recap tr{transition:background .2s}
+.recap tbody tr:hover{background:rgba(31,90,138,.05)}
+.pill{font-family:var(--mono);font-size:11px;padding:3px 9px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.pill.v{color:var(--a)}.pill.s{color:var(--b)}
+
+/* ---------- Quiz ---------- */
+.quiz{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:22px}
+.q{background:var(--card);border:1px solid var(--rule);padding:22px 22px 18px;display:flex;flex-direction:column}
+.q .qn{font-family:var(--mono);font-size:11px;color:var(--a);letter-spacing:.14em}
+.q h4{font-family:var(--body);font-weight:600;font-size:18px;line-height:1.4;margin:6px 0 14px}
+.q .opts{display:grid;gap:8px}
+.q button{font-family:var(--body);font-size:16px;text-align:left;padding:9px 14px;border:1px solid var(--rule);background:var(--paper);cursor:pointer;color:var(--ink);transition:border-color .2s,background .2s,transform .15s;display:flex;gap:10px;align-items:center}
+.q button:hover:not(:disabled){border-color:var(--ink);transform:translateX(3px)}
+.q button b{font-family:var(--mono);font-size:12px;color:var(--muted);width:16px}
+.q button.ok{border-color:var(--c);background:rgba(46,125,87,.1)}
+.q button.bad{border-color:var(--a);background:rgba(200,64,42,.08)}
+.q button:disabled{cursor:default}
+.q .exp{font-size:15px;color:var(--ink-2);margin-top:12px;padding-top:10px;border-top:1px dashed var(--rule);display:none}
+.q.done .exp{display:block;animation:rise .4s both}
+.score{display:flex;align-items:center;gap:24px;margin-top:34px;flex-wrap:wrap}
+.score .bar{flex:1;min-width:200px;height:6px;background:var(--paper-2);position:relative}
+.score .bar i{position:absolute;inset:0 auto 0 0;background:var(--c);width:0;transition:width .6s cubic-bezier(.2,.7,.2,1)}
+.score b{font-family:var(--display);font-size:34px;font-weight:400}
+
+/* ---------- Links ---------- */
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));border-top:1px solid var(--ink)}
+.links a{display:block;padding:22px 22px 22px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:var(--ink);position:relative;transition:padding .25s}
+.links a:hover{padding-left:12px;color:var(--a)}
+.links a small{display:block;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.links a strong{font-family:var(--display);font-weight:500;font-size:22px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.links a p{font-size:15px;color:var(--ink-2);margin-top:4px}
+
+footer{padding:60px 48px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--muted)}
+footer a{color:var(--muted)}
+
+/* ---------- Reveal ---------- */
+.rv{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.12s}.rv.d2{transition-delay:.24s}
+
+@media (max-width:1180px){
+  .layout{grid-template-columns:1fr;padding:0 28px}
+  nav.toc{display:none}
+  .cols,.cols.flip,.calc{grid-template-columns:1fr}
+  .cols.flip .text{order:0}
+  .fig{position:relative;top:0}
+  .hero-inner{padding:80px 28px}
+  .hero-caption{display:none}
+}
+@media (max-width:640px){
+  body{font-size:17px}
+  .sec-head{grid-template-columns:1fr}
+  .num{font-size:72px;margin-bottom:12px}
+  .fig canvas{height:360px}
+  .quiz{grid-template-columns:1fr}
+  .ro{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .recap td,.recap th{padding:10px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>OpenKBS Project</h1>
-        <p>Your project is ready. Start building — ask the chat for anything and watch it appear here.</p>
-        <a href="#" class="btn" onclick="testAPI()">Test API</a>
-        <pre id="result" style="margin-top: 2rem; text-align: left; background: #f5f5f5; padding: 1rem; border-radius: 8px; display: none;"></pre>
+<div class="progress" id="progress"></div>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3" fill="currentColor"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="m18 14 4 4-4 4"/><path d="m18 2 4 4-4 4"/><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/><path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"/><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="i-rot" viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+</svg>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <canvas id="heroField" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <div class="eyebrow">Fizică · Clasa a IX-a · Mecanică</div>
+    <h1>Calcul<em>vectorial</em></h1>
+    <p class="lede">Forța, viteza, accelerația, câmpul electric — natura vorbește în vectori. Învață să-i reprezinți, să-i aduni, să-i descompui și să-i înmulțești, explorând fiecare operație prin simulări interactive.</p>
+    <div class="hero-cta">
+      <a class="btn primary big" href="#s1"><svg class="i"><use href="#i-down"/></svg>Începe lecția</a>
+      <a class="btn big" href="#s11">Calculator vectorial</a>
+      <a class="btn big" href="#s13">Testează-te</a>
     </div>
-    <script>
-        // The preview URL (p-*.…) serves static files only — the API lives on
-        // the production URL. Right after project creation the production
-        // environment needs a minute or two, so instead of surfacing a JSON
-        // parse error we explain and retry.
-        const IS_PREVIEW = /^p-[a-z0-9]+\./.test(location.hostname) || location.port === '6100';
-        let retryTimer = null;
+    <div class="hero-meta">
+      <div><b>10</b><span>operații</span></div>
+      <div><b>11</b><span>simulări</span></div>
+      <div><b>8</b><span>întrebări</span></div>
+      <div><b>≈50</b><span>minute</span></div>
+    </div>
+  </div>
+  <div class="hero-caption">Fundal: <b>câmpul electric al unui dipol</b>. Fiecare săgeată este un vector <i>E</i>. Mișcă mouse-ul — sarcina negativă te urmează.</div>
+</header>
 
-        async function testAPI() {
-            const result = document.getElementById('result');
-            result.style.display = 'block';
-            clearTimeout(retryTimer);
+<div class="layout">
+<nav class="toc" aria-label="Cuprins">
+  <h4>Cuprins</h4>
+  <ol>
+    <li><a href="#s1"><span>01</span>Mărimi vectoriale</a></li>
+    <li><a href="#s2"><span>02</span>Componente și versori</a></li>
+    <li><a href="#s3"><span>03</span>Adunarea a doi vectori</a></li>
+    <li><a href="#s4"><span>04</span>Regula poligonului</a></li>
+    <li><a href="#s5"><span>05</span>Scăderea vectorilor</a></li>
+    <li><a href="#s6"><span>06</span>Înmulțirea cu un scalar</a></li>
+    <li><a href="#s7"><span>07</span>Descompunerea</a></li>
+    <li><a href="#s8"><span>08</span>Produsul scalar</a></li>
+    <li><a href="#s9"><span>09</span>Produsul vectorial</a></li>
+    <li><a href="#s10"><span>10</span>Produsul mixt</a></li>
+    <li><a href="#s11"><span>11</span>Calculator</a></li>
+    <li><a href="#s12"><span>12</span>Fișă recapitulativă</a></li>
+    <li><a href="#s13"><span>13</span>Test</a></li>
+    <li><a href="#s14"><span>14</span>Resurse</a></li>
+  </ol>
+  <div class="foot">Trage de punctele <span style="color:var(--a)">○</span><br>de pe figuri pentru a<br>modifica vectorii.<br><br><a href="#top">↑ Înapoi sus</a></div>
+</nav>
 
-            if (IS_PREVIEW) {
-                result.textContent = '⏳ This is the preview URL — it serves your site\'s static files only.\n' +
-                    'The API runs on your production URL, which is set up automatically\n' +
-                    'right after project creation (usually ready within 1–2 minutes).';
-                return;
-            }
+<main>
 
-            result.textContent = 'Loading...';
-            try {
-                const response = await fetch('/api', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'hello', data: { test: true } })
-                });
-                const text = await response.text();
-                let data;
-                try {
-                    data = JSON.parse(text);
-                } catch {
-                    // Got HTML back — the /api route isn't wired yet (production
-                    // environment still being set up). Retry until it is.
-                    result.textContent = '⏳ Setting up production environment… retrying automatically.';
-                    retryTimer = setTimeout(testAPI, 10000);
-                    return;
-                }
-                result.textContent = JSON.stringify(data, null, 2);
-            } catch (e) {
-                result.textContent = '⏳ API not reachable yet (' + e.message + ') — retrying automatically.';
-                retryTimer = setTimeout(testAPI, 10000);
-            }
-        }
-    </script>
+<!-- ================= 1 ================= -->
+<section class="sec" id="s1">
+  <div class="sec-head rv"><div class="num">01</div><div><div class="kicker">Noțiuni fundamentale</div><h2>Mărimi scalare și <em>mărimi vectoriale</em></h2></div></div>
+  <div class="cols">
+    <div class="text rv">
+      <p class="lead">O mărime <b>scalară</b> este complet determinată de un număr și o unitate de măsură: masa \(m = 2\,\mathrm{kg}\), timpul, temperatura, energia, lucrul mecanic.</p>
+      <p>O mărime <b>vectorială</b> mai are nevoie, în plus, de o <i>direcție</i> și de un <i>sens</i>. A spune că „un corp se mișcă cu 20 m/s” nu ajunge — trebuie să știm <i>încotro</i>. Viteza, accelerația, forța, impulsul și intensitatea câmpului electric sunt mărimi vectoriale.</p>
+      <div class="box def"><span class="tag">Definiție</span>
+        <p>Un <b>vector</b> \(\vec v = \overrightarrow{AB}\) este un segment orientat caracterizat prin:</p>
+        <ul>
+          <li><b>punctul de aplicație</b> (originea) \(A\);</li>
+          <li><b>direcția</b> — dreapta suport pe care se află;</li>
+          <li><b>sensul</b> — indicat de săgeată, de la \(A\) spre \(B\);</li>
+          <li><b>modulul</b> — lungimea, \(|\vec v| = v \ge 0\).</li>
+        </ul>
+      </div>
+      <p>Doi vectori sunt <b>egali</b> dacă au același modul, aceeași direcție și același sens — chiar dacă sunt aplicați în puncte diferite (<i>vectori liberi</i>). <b>Opusul</b> lui \(\vec v\), notat \(-\vec v\), are același modul și aceeași direcție, dar sens contrar. Vectorul de modul zero se numește <b>vector nul</b>, \(\vec 0\).</p>
+      <p>Modulul și orientarea se calculează din coordonatele capetelor:</p>
+      \[ |\vec v| = \sqrt{(\Delta x)^2 + (\Delta y)^2}, \qquad \operatorname{tg}\theta = \frac{\Delta y}{\Delta x} \]
+    </div>
+    <div class="rv d1"><figure class="fig" id="fig1">
+      <div class="fig-h"><b>Fig. 1 — Elementele unui vector</b><span>trage de A sau B</span></div>
+      <canvas></canvas>
+      <div class="ctrls">
+        <button class="btn sm on" data-t="comp">Δx, Δy</button>
+        <button class="btn sm on" data-t="ang">Unghiul θ</button>
+        <button class="btn sm" data-act="equal"><svg class="i"><use href="#i-play"/></svg>Vector egal</button>
+        <button class="btn sm" data-act="opp"><svg class="i"><use href="#i-play"/></svg>Vector opus</button>
+        <button class="btn sm" data-act="reset"><svg class="i"><use href="#i-reset"/></svg>Resetează</button>
+      </div>
+      <dl class="ro">
+        <div><dt>modulul |<span class="vec">v</span>|</dt><dd data-o="mod">—</dd></div>
+        <div><dt>Δx</dt><dd data-o="dx">—</dd></div>
+        <div><dt>Δy</dt><dd data-o="dy">—</dd></div>
+        <div><dt>orientarea θ</dt><dd data-o="th">—</dd></div>
+        <div class="wide"><dt>observație</dt><dd class="txt" data-o="note">Punctul A este originea (punctul de aplicație), B este vârful.</dd></div>
+      </dl>
+    </figure></div>
+  </div>
+</section>
+
+<!-- ================= 2 ================= -->
+<section class="sec" id="s2">
+  <div class="sec-head rv"><div class="num">02</div><div><div class="kicker">Reprezentarea analitică</div><h2>Componente și <em>versori</em></h2></div></div>
+  <div class="cols flip">
+    <div class="text rv">
+      <p class="lead">Într-un sistem de axe \(Oxyz\) introducem <b>versorii</b> \(\vec i,\ \vec j,\ \vec k\): vectori de modul 1 orientați în sensul pozitiv al axelor.</p>
+      <p>Orice vector se scrie ca o combinație a versorilor; coeficienții sunt <b>componentele</b> (proiecțiile) vectorului pe axe:</p>
+      \[ \vec v = v_x\,\vec i + v_y\,\vec j + v_z\,\vec k \]
+      <p>În plan, dacă \(\alpha\) este unghiul format cu axa \(Ox\):</p>
+      \[ v_x = v\cos\alpha,\quad v_y = v\sin\alpha,\quad v=\sqrt{v_x^2+v_y^2} \]
+      <p>În spațiu, \(|\vec v| = \sqrt{v_x^2+v_y^2+v_z^2}\).</p>
+      <div class="box def"><span class="tag">Versorul unui vector</span>
+        <p>Versorul lui \(\vec v\) are aceeași direcție și același sens, dar modul 1:</p>
+        \[ \hat v = \frac{\vec v}{|\vec v|} = (\cos\alpha,\ \sin\alpha) \]
+      </div>
+      <div class="box app"><span class="tag">În fizică</span>
+        <p>La aruncarea oblică, viteza inițială se descompune în \(v_{0x} = v_0\cos\alpha\) (mișcare uniformă) și \(v_{0y} = v_0\sin\alpha\) (mișcare uniform variată) — cele două mișcări se studiază independent.</p>
+      </div>
+    </div>
+    <div class="rv d1"><figure class="fig" id="fig2">
+      <div class="fig-h"><b>Fig. 2 — Descompunerea pe axe</b><span>trage de vârful lui v</span></div>
+      <canvas></canvas>
+      <div class="ctrls">
+        <button class="btn sm primary" data-act="anim"><svg class="i"><use href="#i-play"/></svg>Animează proiecțiile</button>
+        <button class="btn sm" data-t="hat">Versorul v̂</button>
+        <button class="btn sm on" data-t="ver">Versorii i, j</button>
+        <button class="btn sm" data-act="reset"><svg class="i"><use href="#i-reset"/></svg>Resetează</button>
+      </div>
+      <dl class="ro">
+        <div class="wide"><dt>scrierea analitică</dt><dd data-o="eq">—</dd></div>
+        <div><dt>|<span class="vec">v</span>|</dt><dd data-o="mod">—</dd></div>
+        <div><dt>α</dt><dd data-o="al">—</dd></div>
+        <div class="w2"><dt>v̂</dt><dd data-o="hat">—</dd></div>
+      </dl>
+    </figure></div>
+  </div>
+</section>
+
+<!-- ================= 3 ================= -->
+<section class="sec" id="s3">
+  <div class="sec-head rv"><div class="num">03</div><div><div class="kicker">Compunerea vectorilor</div><h2>Adunarea a <em>doi vectori</em></h2></div></div>
+  <div class="cols">
+    <div class="text rv">
+      <p class="lead">Suma \(\vec R = \vec a + \vec b\) se numește <b>rezultantă</b>. Ea se construiește geometric prin două reguli echivalente.</p>
+      <h3>Regula paralelogramului</h3>
+      <p>Vectorii se aplică în același punct. Rezultanta este diagonala paralelogramului construit pe cei doi vectori, pornind din originea comună.</p>
+      <h3>Regula triunghiului</h3>
+      <p>Se translatează \(\vec b\) astfel încât originea lui să coincidă cu vârful lui \(\vec a\). Rezultanta unește originea lui \(\vec a\) cu vârful lui \(\vec b\).</p>
+      <p>Modulul rezultantei rezultă din teorema cosinusului, unde \(\alpha\) este unghiul dintre vectori:</p>
+      \[ R = \sqrt{a^2 + b^2 + 2ab\cos\alpha} \]
+      <ul>
+        <li>\(\alpha = 0^\circ\): \(R = a + b\) (valoare maximă);</li>
+        <li>\(\alpha = 90^\circ\): \(R = \sqrt{a^2+b^2}\) (Pitagora);</li>
+        <li>\(\alpha = 180^\circ\): \(R = |a - b|\) (valoare minimă).</li>
+      </ul>
+      <p>Așadar \(|a-b| \le R \le a+b\). Analitic, componentele se adună: \(\vec R = (a_x+b_x)\,\vec i + (a_y+b_y)\,\vec j\).</p>
+      <div class="box def"><span class="tag">Proprietăți</span>
+        <p>Comutativitate \(\vec a+\vec b=\vec b+\vec a\) · asociativitate \((\vec a+\vec b)+\vec c=\vec a+(\vec b+\vec c)\) · element neutru \(\vec a+\vec 0=\vec a\) · opus \(\vec a+(-\vec a)=\vec 0\).</p>
+      </div>
+    </div>
+    <div class="rv d1"><figure class="fig" id="fig3">
+      <div class="fig-h"><b>Fig. 3 — Rezultanta R = a + b</b><span>trage de vârfurile vectorilor</span></div>
+      <canvas></canvas>
+      <div class="ctrls">
+        <button class="btn sm on" data-mode="par">Paralelogram</button>
+        <button class="btn sm" data-mode="tri">Triunghi</button>
+        <button class="btn sm primary" data-act="anim"><svg class="i"><use href="#i-play"/></svg>Construiește</button>
+        <button class="btn sm" data-t="comm"><svg class="i"><use href="#i-swap"/></svg>b + a</button>
+        <button class="btn sm" data-act="reset"><svg class="i"><use href="#i-reset"/></svg></button>
+      </div>
+      <dl class="ro">
+        <div><dt><span class="vec">R</span> (analitic)</dt><dd data-o="R">—</dd></div>
+        <div><dt>|<span class="vec">R</span>| din componente</dt><dd data-o="Rm">—</dd></div>
+        <div><dt>α (unghiul a, b)</dt><dd data-o="al">—</dd></div>
+        <div><dt>√(a²+b²+2ab cos α)</dt><dd data-o="Rf">—</dd></div>
+      </dl>
+    </figure></div>
+  </div>
+</section>
+
+<!-- ================= 4 ================= -->
+<section class="sec" id="s4">
+  <div class="sec-head rv"><div class="num">04</div><div><div class="kicker">Mai mulți vectori</div><h2>Regula <em>poligonului</em></h2></div></div>
+  <div class="cols flip">
+    <div class="text rv">
+      <p class="lead">Pentru \(n\) vectori se aplică repetat regula triunghiului: fiecare vector se așază cu originea în vârful celui precedent.</p>
+      <p>Rezultanta închide linia poligonală: pornește din originea primului vector și ajunge în vârful ultimului.</p>
+      \[ \vec R = \sum_{k=1}^{n}\vec F_k, \qquad R_x = \sum F_{kx},\quad R_y=\sum F_{ky} \]
+      <p>Ordinea în care sunt așezați vectorii nu contează — poligonul se schimbă, dar rezultanta rămâne aceeași.</p>
+      <div class="box app"><span class="tag">Echilibrul punctului material</span>
+        <p>Dacă poligonul forțelor se închide, \(\vec R = \vec 0\): conform principiului inerției, punctul material rămâne în repaus sau în mișcare rectilinie uniformă. Condiția de echilibru: \(\sum \vec F_k = \vec 0\), adică \(\sum F_{kx}=0\) și \(\sum F_{ky}=0\).</p>
+      </div>
+      <p>Apasă <b>Echilibru</b> pe figură: ultima forță devine exact opusul sumei celorlalte, iar poligonul se închide.</p>
+    </div>
+    <div class="rv d1"><figure class="fig" id="fig4">
+      <div class="fig-h"><b>Fig. 4 — Poligonul forțelor</b><span>trage de vârfuri</span></div>
+      <canvas></canvas>
+      <div class="ctrls">
+        <button class="btn sm primary" data-act="anim"><svg class="i"><use href="#i-play"/></svg>Animează</button>
+        <button class="btn sm" data-act="add"><svg class="i"><use href="#i-plus"/></svg>Forță</button>
+        <button class="btn sm" data-act="rem"><svg class="i"><use href="#i-minus"/></svg>Forță</button>
+        <button class="btn sm" data-act="rand"><svg class="i"><use href="#i-shuffle"/></svg>Aleator</button>
+        <button class="btn sm" data-act="eq">Echilibru</button>
+      </div>
+      <dl class="ro">
+        <div><dt>n</dt><dd data-o="n">—</dd></div>
+        <div><dt>R<sub>x</sub> = ΣF<sub>x</sub></dt><dd data-o="rx">—</dd></div>
+        <div><dt>R<sub>y</sub> = ΣF<sub>y</sub></dt><dd data-o="ry">—</dd></div>
+        <div><dt>|<span class="vec">R</span>|</dt><dd data-o="rm">—</dd></div>
+        <div class="wide"><dt>stare</dt><dd class="txt" data-o="st">—</dd></div>
+      </dl>
+    </figure></div>
+  </div>
+</section>
+
+<!-- ================= 5 ================= -->
+<section class="sec" id="s5">
+  <div class="sec-head rv"><div class="num">05</div><div><div class="kicker">Diferența</div><h2>Scăderea <em>vectorilor</em></h2></div></div>
+  <div class="cols">
+    <div class="text rv">
+      <p class="lead">Scăderea se reduce la adunare: a scădea \(\vec b\) înseamnă a aduna opusul său.</p>
+      \[ \vec d = \vec a - \vec b = \vec a + (-\vec b) \]
+      <p>Geometric, dacă \(\vec a\) și \(\vec b\) au aceeași origine, diferența \(\vec a - \vec b\) este vectorul care <b>unește vârful lui \(\vec b\) cu vârful lui \(\vec a\)</b> — cealaltă diagonală a paralelogramului.</p>
+      \[ |\vec a - \vec b| = \sqrt{a^2 + b^2 - 2ab\cos\alpha} \]
+      <p>Analitic: \(\vec d = (a_x-b_x)\,\vec i + (a_y-b_y)\,\vec j\). Atenție, scăderea nu este comutativă: \(\vec b - \vec a = -(\vec a-\vec b)\).</p>
+      <div class="box app"><span class="tag">În fizică</span>
+        <p><b>Variația vitezei</b> \(\Delta\vec v = \vec v_2 - \vec v_1\) definește accelerația medie \(\vec a_m = \Delta\vec v/\Delta t\). În mișcarea circulară uniformă modulul vitezei e constant, dar \(\Delta\vec v \ne \vec 0\) — de aici apare accelerația centripetă. La fel, <b>vectorul deplasare</b> este \(\Delta\vec r = \vec r_2 - \vec r_1\).</p>
+      </div>
+    </div>
+    <div class="rv d1"><figure class="fig" id="fig5">
+      <div class="fig-h"><b>Fig. 5 — d = a − b</b><span>trage de vârfuri</span></div>
+      <canvas></canvas>
+      <div class="ctrls">
+        <button class="btn sm primary" data-act="m1"><svg class="i"><use href="#i-play"/></svg>Metoda a + (−b)</button>
+        <button class="btn sm" data-act="m2"><svg class="i"><use href="#i-play"/></svg>Metoda directă</button>
+        <button class="btn sm" data-act="reset"><svg class="i"><use href="#i-reset"/></svg>Resetează</button>
+      </div>
+      <dl class="ro">
+        <div><dt><span class="vec">d</span> = <span class="vec">a</span> − <span class="vec">b</span></dt><dd data-o="d">—</dd></div>
+        <div><dt>|<span class="vec">d</span>|</dt><dd data-o="dm">—</dd></div>
+        <div><dt>α</dt><dd data-o="al">—</dd></div>
+        <div><dt>√(a²+b²−2ab cos α)</dt><dd data-o="df">—</dd></div>
+      </dl>
+    </figure></div>
+  </div>
+</section>
+
+<!-- ================= 6 ================= -->
+<section class="sec" id="s6">
+  <div class="sec-head rv"><div class="num">06</div><div><div class="kicker">Scalar × vector</div><h2>Înmulțirea cu un <em>scalar</em></h2></div></div>
+  <div class="cols flip">
+    <div class="text rv">
+      <p class="lead">Produsul dintre un număr real \(k\) și un vector \(\vec a\) este un vector \(k\vec a\) cu:</p>
+      <ul>
+        <li><b>modulul</b> \(|k\vec a| = |k|\cdot|\vec a|\);</li>
+        <li><b>aceeași direcție</b> cu \(\vec a\);</li>
+        <li><b>sensul</b> lui \(\vec a\) dacă \(k>0\), sens opus dacă \(k<0\); pentru \(k=0\) se obține \(\vec 0\).</li>
+      </ul>
+      \[ k\vec a = (k a_x)\,\vec i + (k a_y)\,\vec j \]
+      <p>Doi vectori nenuli sunt <b>coliniari</b> dacă și numai dacă unul se obține din celălalt prin înmulțire cu un scalar: \(\vec b = k\vec a\).</p>
+      <div class="box def"><span class="tag">Proprietăți</span>
+        <p>\(k(\vec a+\vec b)=k\vec a+k\vec b\) · \((k+m)\vec a=k\vec a+m\vec a\) · \(k(m\vec a)=(km)\vec a\) · \(1\cdot\vec a=\vec a\).</p>
+      </div>
+      <div class="box app"><span class="tag">În fizică</span>
+        <p>Principiul fundamental \(\vec F = m\vec a\) (masa \(m>0\) → forța și accelerația au același sens), impulsul \(\vec p = m\vec v\), forța electrică \(\vec F = q\vec E\) — pentru \(q<0\) forța are sens opus câmpului!</p>
+      </div>
+    </div>
+    <div class="rv d1"><figure class="fig" id="fig6">
+      <div class="fig-h"><b>Fig. 6 — Vectorul k·a</b><span>trage de vârful lui a</span></div>
+      <canvas></canvas>
+      <div class="sliders"><label class="sl"><span>k</span><input type="range" min="-3" max="3" step="0.1" value="1.5" data-s="k"><output data-so="k">1.5</output></label></div>
+      <div class="ctrls">
+        <button class="btn sm primary" data-act="anim"><svg class="i"><use href="#i-play"/></svg>Variază k</button>
+        <button class="btn sm" data-k="-1">k = −1</button>
+        <button class="btn sm" data-k="0">k = 0</button>
+        <button class="btn sm" data-k="0.5">k = ½</button>
+        <button class="btn sm" data-k="2">k = 2</button>
+      </div>
+      <dl class="ro">
+        <div class="w2"><dt>k·<span class="vec">a</span></dt><dd data-o="ka">—</dd></div>
+        <div class="w2"><dt>|k·<span class="vec">a</span>| = |k|·|<span class="vec">a</span>|</dt><dd data-o="km">—</dd></div>
+        <div class="wide"><dt>sensul</dt><dd class="txt" data-o="sens">—</dd></div>
+      </dl>
+    </figure></div>
+  </div>
+</section>
+
+<!-- ================= 7 ================= -->
+<section class="sec" id="s7">
+  <div class="sec-head rv"><div class="num">07</div><div><div class="kicker">Operația inversă adunării</div><h2>Descompunerea <em>unui vector</em></h2></div></div>
+  <div class="cols">
+    <div class="text rv">
+      <p class="lead">A descompune un vector după două direcții date înseamnă a găsi doi vectori, orientați pe acele direcții, a căror sumă este vectorul inițial.</p>
+      <p>Construcția: prin vârful vectorului se duc paralele la cele două direcții; laturile paralelogramului obținut sunt componentele căutate. Descompunerea după două direcții date este <b>unică</b>.</p>
+      <h3>Exemplu clasic: planul înclinat</h3>
+      <p>Greutatea \(\vec G = m\vec g\) a unui corp aflat pe un plan înclinat de unghi \(\alpha\) se descompune într-o componentă paralelă cu planul și una perpendiculară pe el:</p>
+      \[ \vec G = \vec G_t + \vec G_n \]
+      \[ G_t = mg\sin\alpha, \qquad G_n = mg\cos\alpha \]
+      <p>Unghiul dintre \(\vec G\) și \(\vec G_n\) este egal cu unghiul planului \(\alpha\) — unghiuri cu laturile respectiv perpendiculare.</p>
+      <div class="box app"><span class="tag">Interpretare</span>
+        <p>\(\vec G_t\) trage corpul în josul planului, iar \(\vec G_n\) apasă pe plan și este echilibrată de reacțiunea normală: \(N = mg\cos\alpha\). Forța de frecare la alunecare va fi \(F_f = \mu N = \mu mg\cos\alpha\).</p>
+      </div>
+    </div>
+    <div class="rv d1"><figure class="fig" id="fig7">
+      <div class="fig-h"><b>Fig. 7 — Greutatea pe planul înclinat</b><span>g = 9,81 m/s²</span></div>
+      <canvas></canvas>
+      <div class="sliders">
+        <label class="sl"><span>α</span><input type="range" min="0" max="65" step="1" value="30" data-s="al"><output data-so="al">30°</output></label>
+        <label class="sl"><span>m</span><input type="range" min="0.5" max="10" step="0.5" value="2" data-s="m"><output data-so="m">2 kg</output></label>
+      </div>
+      <div class="ctrls">
+        <button class="btn sm primary" data-act="anim"><svg class="i"><use href="#i-play"/></svg>Descompune G</button>
+        <button class="btn sm" data-t="N">Reacțiunea N</button>
+      </div>
+      <dl class="ro">
+        <div><dt>G = mg</dt><dd data-o="G">—</dd></div>
+        <div><dt>G<sub>t</sub> = mg sin α</dt><dd data-o="Gt">—</dd></div>
+        <div><dt>G<sub>n</sub> = mg cos α</dt><dd data-o="Gn">—</dd></div>
+        <div><dt>verificare √(G<sub>t</sub>²+G<sub>n</sub>²)</dt><dd data-o="chk">—</dd></div>
+      </dl>
+    </figure></div>
+  </div>
+</section>
+
+<!-- ================= 8 ================= -->
+<section class="sec" id="s8">
+  <div class="sec-head rv"><div class="num">08</div><div><div class="kicker">Rezultat: un scalar</div><h2>Produsul <em>scalar</em></h2></div></div>
+  <div class="cols flip">
+    <div class="text rv">
+      <p class="lead">Produsul scalar a doi vectori este un <b>număr</b>, egal cu produsul modulelor înmulțit cu cosinusul unghiului dintre ei:</p>
+      \[ \vec a\cdot\vec b = |\vec a|\,|\vec b|\cos\theta = a_x b_x + a_y b_y + a_z b_z \]
+      <p>Geometric, este produsul dintre modulul lui \(\vec a\) și <b>proiecția</b> lui \(\vec b\) pe direcția lui \(\vec a\):</p>
+      \[ \mathrm{pr}_{\vec a}\,\vec b = b\cos\theta = \frac{\vec a\cdot\vec b}{|\vec a|} \]
+      <ul>
+        <li>\(\theta < 90^\circ\) — produs <b>pozitiv</b>;</li>
+        <li>\(\theta = 90^\circ\) — produs <b>nul</b> (condiția de perpendicularitate);</li>
+        <li>\(\theta > 90^\circ\) — produs <b>negativ</b>.</li>
+      </ul>
+      <div class="box def"><span class="tag">Proprietăți</span>
+        <p>Comutativ \(\vec a\cdot\vec b=\vec b\cdot\vec a\) · distributiv \(\vec a\cdot(\vec b+\vec c)=\vec a\cdot\vec b+\vec a\cdot\vec c\) · \(\vec a\cdot\vec a=a^2\) · \(\vec i\cdot\vec i=1,\ \vec i\cdot\vec j=0\). Unghiul dintre doi vectori: \(\cos\theta = \dfrac{\vec a\cdot\vec b}{ab}\).</p>
+      </div>
+      <div class="box app"><span class="tag">În fizică</span>
+        <p><b>Lucrul mecanic</b> \(L=\vec F\cdot\vec d = Fd\cos\alpha\) — o forță perpendiculară pe deplasare (de exemplu forța centripetă) nu efectuează lucru mecanic. <b>Puterea</b> \(P=\vec F\cdot\vec v\); <b>fluxul magnetic</b> \(\Phi=\vec B\cdot\vec S\).</p>
+      </div>
+    </div>
+    <div class="rv d1"><figure class="fig" id="fig8">
+      <div class="fig-h"><b>Fig. 8 — a · b și proiecția</b><span>trage de vârfuri</span></div>
+      <canvas></canvas>
+      <canvas class="mini"></canvas>
+      <div class="ctrls">
+        <button class="btn sm primary" data-act="spin"><svg class="i"><use href="#i-rot"/></svg>Rotește b</button>
+        <button class="btn sm" data-p="0">Paraleli</button>
+        <button class="btn sm" data-p="90">Perpendiculari</button>
+        <button class="btn sm" data-p="180">Antiparaleli</button>
+      </div>
+      <dl class="ro">
+        <div><dt>θ</dt><dd data-o="th">—</dd></div>
+        <div><dt><span class="vec">a</span>·<span class="vec">b</span> = ab cos θ</dt><dd data-o="d1">—</dd></div>
+        <div><dt>a<sub>x</sub>b<sub>x</sub> + a<sub>y</sub>b<sub>y</sub></dt><dd data-o="d2">—</dd></div>
+        <div><dt>pr<sub>a</sub> b = b cos θ</dt><dd data-o="pr">—</dd></div>
+        <div class="wide"><dt>concluzie</dt><dd class="txt" data-o="st">—</dd></div>
+      </dl>
+    </figure></div>
+  </div>
+</section>
+
+<!-- ================= 9 ================= -->
+<section class="sec" id="s9">
+  <div class="sec-head rv"><div class="num">09</div><div><div class="kicker">Rezultat: un vector</div><h2>Produsul <em>vectorial</em></h2></div></div>
+  <div class="cols">
+    <div class="text rv">
+      <p class="lead">Produsul vectorial \(\vec c = \vec a\times\vec b\) este un <b>vector</b> definit prin:</p>
+      <ul>
+        <li><b>modul</b>: \(|\vec a\times\vec b| = ab\sin\theta\) — aria paralelogramului construit pe \(\vec a\) și \(\vec b\);</li>
+        <li><b>direcție</b>: perpendiculară pe planul determinat de \(\vec a\) și \(\vec b\);</li>
+        <li><b>sens</b>: dat de <b>regula burghiului drept</b> — sensul în care înaintează un burghiu rotit de la \(\vec a\) spre \(\vec b\) pe drumul cel mai scurt (sau regula mâinii drepte).</li>
+      </ul>
+      <p>Analitic, se calculează cu un determinant:</p>
+      \[ \vec a\times\vec b=\begin{vmatrix}\vec i&\vec j&\vec k\\ a_x&a_y&a_z\\ b_x&b_y&b_z\end{vmatrix} \]
+      \[ \begin{aligned} c_x&=a_yb_z-a_zb_y\\ c_y&=a_zb_x-a_xb_z\\ c_z&=a_xb_y-a_yb_x \end{aligned} \]
+      <div class="box def"><span class="tag">Proprietăți</span>
+        <p><b>Anticomutativ</b>: \(\vec a\times\vec b=-\,\vec b\times\vec a\) · \(\vec a\times\vec a=\vec 0\) (vectori coliniari ⇒ produs nul) · distributiv față de adunare · \(\vec i\times\vec j=\vec k,\ \vec j\times\vec k=\vec i,\ \vec k\times\vec i=\vec j\).</p>
+      </div>
+      <div class="box app"><span class="tag">În fizică</span>
+        <p><b>Momentul forței</b> \(\vec M=\vec r\times\vec F\) · <b>forța Lorentz</b> \(\vec F=q\,\vec v\times\vec B\) · <b>momentul cinetic</b> \(\vec L=\vec r\times\vec p\) · viteza în mișcarea circulară \(\vec v=\vec\omega\times\vec r\).</p>
+      </div>
+    </div>
+    <div class="rv d1"><figure class="fig" id="fig9">
+      <div class="fig-h"><b>Fig. 9 — c = a × b (3D)</b><span>trage pentru a roti scena · c la scara 1:2</span></div>
+      <canvas class="h3d"></canvas>
+      <div class="sliders">
+        <label class="sl"><span>θ</span><input type="range" min="0" max="180" step="1" value="65" data-s="th"><output data-so="th">65°</output></label>
+        <label class="sl"><span>a</span><input type="range" min="0.5" max="3.5" step="0.1" value="3" data-s="A"><output data-so="A">3.0</output></label>
+        <label class="sl"><span>b</span><input type="range" min="0.5" max="3.5" step="0.1" value="2.5" data-s="B"><output data-so="B">2.5</output></label>
+      </div>
+      <div class="ctrls">
+        <button class="btn sm primary" data-act="screw"><svg class="i"><use href="#i-play"/></svg>Regula burghiului</button>
+        <button class="btn sm" data-act="swap"><svg class="i"><use href="#i-swap"/></svg>a×b ⇄ b×a</button>
+        <button class="btn sm" data-t="auto"><svg class="i"><use href="#i-rot"/></svg>Rotație</button>
+        <button class="btn sm" data-act="view"><svg class="i"><use href="#i-eye"/></svg>Vedere</button>
+      </div>
+      <dl class="ro">
+        <div class="w2"><dt>produsul</dt><dd data-o="name">—</dd></div>
+        <div class="w2"><dt>componente</dt><dd data-o="c">—</dd></div>
+        <div class="w2"><dt>|<span class="vec">c</span>| = ab sin θ</dt><dd data-o="cm">—</dd></div>
+        <div class="w2"><dt>aria paralelogramului</dt><dd data-o="S">—</dd></div>
+      </dl>
+    </figure></div>
+  </div>
+</section>
+
+<!-- ================= 10 ================= -->
+<section class="sec" id="s10">
+  <div class="sec-head rv"><div class="num">10</div><div><div class="kicker">Trei vectori</div><h2>Produsul mixt și <em>dublul produs vectorial</em></h2></div></div>
+  <div class="cols flip">
+    <div class="text rv">
+      <p class="lead">Produsul mixt combină cele două produse și dă un <b>scalar</b>:</p>
+      \[ (\vec a,\vec b,\vec c) = \vec a\cdot(\vec b\times\vec c) = \begin{vmatrix}a_x&a_y&a_z\\ b_x&b_y&b_z\\ c_x&c_y&c_z\end{vmatrix} \]
+      <p>Valoarea sa absolută este <b>volumul paralelipipedului</b> construit pe cei trei vectori: aria bazei \(S=|\vec a\times\vec b|\) înmulțită cu înălțimea \(h\).</p>
+      <ul>
+        <li>semnul este \(+\) dacă tripletul \((\vec a,\vec b,\vec c)\) este orientat drept, \(-\) dacă este stâng;</li>
+        <li>\((\vec a,\vec b,\vec c)=0\) ⇔ vectorii sunt <b>coplanari</b>;</li>
+        <li>permutarea circulară nu schimbă valoarea: \((\vec a,\vec b,\vec c)=(\vec b,\vec c,\vec a)=(\vec c,\vec a,\vec b)\).</li>
+      </ul>
+      <div class="box def"><span class="tag">Dublul produs vectorial</span>
+        <p>Rezultatul este un vector situat în planul lui \(\vec b\) și \(\vec c\) (formula „bac minus cab”):</p>
+        \[ \vec a\times(\vec b\times\vec c)=\vec b\,(\vec a\cdot\vec c)-\vec c\,(\vec a\cdot\vec b) \]
+        <p>Produsul vectorial <b>nu este asociativ</b>: în general \(\vec a\times(\vec b\times\vec c)\ne(\vec a\times\vec b)\times\vec c\).</p>
+      </div>
+      <div class="box app"><span class="tag">În fizică</span>
+        <p>Accelerația centripetă \(\vec a_{cp}=\vec\omega\times(\vec\omega\times\vec r)\); fluxul unui câmp uniform printr-o suprafață definită de doi vectori \(\Phi=\vec B\cdot(\vec u\times\vec w)\).</p>
+      </div>
+    </div>
+    <div class="rv d1"><figure class="fig" id="fig10">
+      <div class="fig-h"><b>Fig. 10 — Volumul paralelipipedului</b><span>trage pentru a roti</span></div>
+      <canvas class="h3d"></canvas>
+      <div class="sliders">
+        <label class="sl"><span>β</span><input type="range" min="-70" max="85" step="1" value="55" data-s="be"><output data-so="be">55°</output></label>
+        <label class="sl"><span>φ</span><input type="range" min="0" max="360" step="1" value="40" data-s="ph"><output data-so="ph">40°</output></label>
+      </div>
+      <div class="ctrls">
+        <button class="btn sm primary" data-act="build"><svg class="i"><use href="#i-play"/></svg>Construiește</button>
+        <button class="btn sm" data-act="flat">Coplanari</button>
+        <button class="btn sm" data-t="auto"><svg class="i"><use href="#i-rot"/></svg>Rotație</button>
+      </div>
+      <dl class="ro">
+        <div><dt>(<span class="vec">a</span>, <span class="vec">b</span>, <span class="vec">c</span>)</dt><dd data-o="mx">—</dd></div>
+        <div><dt>S = |<span class="vec">a</span>×<span class="vec">b</span>|</dt><dd data-o="S">—</dd></div>
+        <div><dt>h</dt><dd data-o="h">—</dd></div>
+        <div><dt>V = S·h</dt><dd data-o="V">—</dd></div>
+        <div class="wide"><dt>orientare</dt><dd class="txt" data-o="st">—</dd></div>
+      </dl>
+    </figure></div>
+  </div>
+</section>
+
+<!-- ================= 11 ================= -->
+<section class="sec" id="s11">
+  <div class="sec-head rv"><div class="num">11</div><div><div class="kicker">Laborator</div><h2>Calculator <em>vectorial</em></h2></div></div>
+  <p class="lead rv" style="max-width:760px;margin-bottom:36px">Introdu componentele a trei vectori în spațiu. Toate operațiile se recalculează instantaneu, iar scena 3D afișează \(\vec a\), \(\vec b\), \(\vec a+\vec b\) și \(\vec a\times\vec b\).</p>
+  <div class="calc rv d1">
+    <div class="calc-in" id="calc">
+      <div class="vrow"><span></span><span class="hd">x</span><span class="hd">y</span><span class="hd">z</span></div>
+      <div class="vrow"><label style="color:var(--a)"><span class="vec">a</span></label><input type="number" step="any" value="2" data-c="ax"><input type="number" step="any" value="1" data-c="ay"><input type="number" step="any" value="0" data-c="az"></div>
+      <div class="vrow"><label style="color:var(--b)"><span class="vec">b</span></label><input type="number" step="any" value="1" data-c="bx"><input type="number" step="any" value="3" data-c="by"><input type="number" step="any" value="1" data-c="bz"></div>
+      <div class="vrow"><label style="color:var(--c)"><span class="vec">c</span></label><input type="number" step="any" value="0" data-c="cx"><input type="number" step="any" value="1" data-c="cy"><input type="number" step="any" value="2" data-c="cz"></div>
+      <div class="krow"><label style="font-size:20px;font-style:italic;font-weight:600">k</label><input type="number" step="any" value="2" data-c="k"></div>
+      <div class="ctrls" style="padding:16px 0 0;border:0">
+        <button class="btn sm primary" data-act="rand"><svg class="i"><use href="#i-shuffle"/></svg>Exemplu aleator</button>
+        <button class="btn sm" data-act="ortho">Versorii i, j, k</button>
+      </div>
+      <dl class="calc-out" id="calcOut"></dl>
+    </div>
+    <figure class="fig" id="fig11" style="position:relative;top:0">
+      <div class="fig-h"><b>Fig. 11 — Vizualizare 3D</b><span>scară automată · trage pentru a roti</span></div>
+      <canvas class="h3d" style="height:560px"></canvas>
+      <div class="ctrls">
+        <button class="btn sm on" data-t="auto"><svg class="i"><use href="#i-rot"/></svg>Rotație</button>
+        <button class="btn sm on" data-t="sum">a + b</button>
+        <button class="btn sm on" data-t="cr">a × b</button>
+        <button class="btn sm" data-t="cc">c</button>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<!-- ================= 12 ================= -->
+<section class="sec" id="s12">
+  <div class="sec-head rv"><div class="num">12</div><div><div class="kicker">De reținut</div><h2>Fișă <em>recapitulativă</em></h2></div></div>
+  <div class="rv" style="overflow-x:auto">
+  <table class="recap">
+    <thead><tr><th>Operația</th><th>Formula</th><th>Rezultat</th><th>Exemplu în fizică</th></tr></thead>
+    <tbody>
+      <tr><td><a href="#s2">Modulul</a></td><td>\(|\vec v|=\sqrt{v_x^2+v_y^2+v_z^2}\)</td><td><span class="pill s">scalar</span></td><td>viteza scalară</td></tr>
+      <tr><td><a href="#s3">Adunarea</a></td><td>\(\vec a+\vec b,\ \ R=\sqrt{a^2+b^2+2ab\cos\alpha}\)</td><td><span class="pill v">vector</span></td><td>forța rezultantă</td></tr>
+      <tr><td><a href="#s4">Suma a n vectori</a></td><td>\(\vec R=\sum\vec F_k\)</td><td><span class="pill v">vector</span></td><td>echilibrul: \(\sum\vec F=\vec 0\)</td></tr>
+      <tr><td><a href="#s5">Scăderea</a></td><td>\(\vec a-\vec b=\vec a+(-\vec b)\)</td><td><span class="pill v">vector</span></td><td>\(\Delta\vec v=\vec v_2-\vec v_1\)</td></tr>
+      <tr><td><a href="#s6">Înmulțirea cu scalar</a></td><td>\(k\vec a,\ \ |k\vec a|=|k|\,a\)</td><td><span class="pill v">vector</span></td><td>\(\vec F=m\vec a,\ \vec p=m\vec v\)</td></tr>
+      <tr><td><a href="#s7">Descompunerea</a></td><td>\(\vec G=\vec G_t+\vec G_n\)</td><td><span class="pill v">2 vectori</span></td><td>planul înclinat</td></tr>
+      <tr><td><a href="#s8">Produsul scalar</a></td><td>\(\vec a\cdot\vec b=ab\cos\theta=\sum a_ib_i\)</td><td><span class="pill s">scalar</span></td><td>\(L=\vec F\cdot\vec d\)</td></tr>
+      <tr><td><a href="#s8">Proiecția</a></td><td>\(\mathrm{pr}_{\vec a}\vec b=\vec a\cdot\vec b/a\)</td><td><span class="pill s">scalar</span></td><td>componenta tangențială</td></tr>
+      <tr><td><a href="#s9">Produsul vectorial</a></td><td>\(|\vec a\times\vec b|=ab\sin\theta\)</td><td><span class="pill v">vector</span></td><td>\(\vec M=\vec r\times\vec F\)</td></tr>
+      <tr><td><a href="#s10">Produsul mixt</a></td><td>\((\vec a,\vec b,\vec c)=\vec a\cdot(\vec b\times\vec c)\)</td><td><span class="pill s">scalar</span></td><td>volumul paralelipipedului</td></tr>
+      <tr><td><a href="#s10">Dublul produs vectorial</a></td><td>\(\vec a\times(\vec b\times\vec c)=\vec b(\vec a\cdot\vec c)-\vec c(\vec a\cdot\vec b)\)</td><td><span class="pill v">vector</span></td><td>accelerația centripetă</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ================= 13 ================= -->
+<section class="sec" id="s13">
+  <div class="sec-head rv"><div class="num">13</div><div><div class="kicker">Autoevaluare</div><h2>Verifică ce <em>ai învățat</em></h2></div></div>
+  <div class="quiz rv" id="quiz"></div>
+  <div class="score rv">
+    <b id="scoreTxt">0 / 8</b>
+    <div class="bar"><i id="scoreBar"></i></div>
+    <button class="btn" id="quizReset"><svg class="i"><use href="#i-reset"/></svg>Reia testul</button>
+  </div>
+</section>
+
+<!-- ================= 14 ================= -->
+<section class="sec" id="s14" style="border-bottom:0">
+  <div class="sec-head rv"><div class="num">14</div><div><div class="kicker">Pentru aprofundare</div><h2>Resurse <em>externe</em></h2></div></div>
+  <div class="links rv">
+    <a href="https://phet.colorado.edu/ro/simulations/vector-addition" target="_blank" rel="noopener"><small>Simulare · PhET Colorado</small><strong>Adunarea vectorilor <svg class="i"><use href="#i-ext"/></svg></strong><p>Simularea clasică a Universității Colorado, disponibilă în limba română.</p></a>
+    <a href="https://ro.wikipedia.org/wiki/Vector" target="_blank" rel="noopener"><small>Enciclopedie · Wikipedia</small><strong>Vector <svg class="i"><use href="#i-ext"/></svg></strong><p>Definiția riguroasă și istoria noțiunii de vector.</p></a>
+    <a href="https://ro.wikipedia.org/wiki/Produs_scalar" target="_blank" rel="noopener"><small>Enciclopedie · Wikipedia</small><strong>Produs scalar <svg class="i"><use href="#i-ext"/></svg></strong><p>Proprietăți, interpretare geometrică și generalizări.</p></a>
+    <a href="https://ro.wikipedia.org/wiki/Produs_vectorial" target="_blank" rel="noopener"><small>Enciclopedie · Wikipedia</small><strong>Produs vectorial <svg class="i"><use href="#i-ext"/></svg></strong><p>Regula mâinii drepte, determinantul și aplicații.</p></a>
+    <a href="http://hyperphysics.phy-astr.gsu.edu/hbase/vect.html" target="_blank" rel="noopener"><small>Referință · HyperPhysics</small><strong>Vectors <svg class="i"><use href="#i-ext"/></svg></strong><p>Hartă conceptuală a operațiilor cu vectori (în engleză).</p></a>
+    <a href="https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:vectors" target="_blank" rel="noopener"><small>Curs video · Khan Academy</small><strong>Vectors <svg class="i"><use href="#i-ext"/></svg></strong><p>Lecții video și exerciții cu rezolvare pas cu pas.</p></a>
+  </div>
+</section>
+</main>
+</div>
+
+<footer>Calcul vectorial — lecție interactivă de fizică · Figurile sunt desenate în timp real, la scară, în unități arbitrare · <a href="#top">↑ Înapoi sus</a></footer>
+
+<script>
+/* =====================================================================
+   Utilitare matematice și de desen
+   ===================================================================== */
+const COL={a:'#c8402a',b:'#1f5a8a',c:'#2e7d57',r:'#1a1d26',o:'#b07a12',plum:'#7b3f61',teal:'#2a7f86',muted:'#6f6a5f',paper:'#fbf8f1'};
+const PAL=[COL.a,COL.b,COL.c,COL.o,COL.plum,COL.teal];
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const add=(u,v)=>u.map((x,i)=>x+v[i]), sub=(u,v)=>u.map((x,i)=>x-v[i]), mul=(u,k)=>u.map(x=>x*k);
+const dot=(u,v)=>u.reduce((s,x,i)=>s+x*v[i],0), norm=u=>Math.hypot(...u);
+const cross=(u,v)=>[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
+const rot2=(v,t)=>[v[0]*Math.cos(t)-v[1]*Math.sin(t),v[0]*Math.sin(t)+v[1]*Math.cos(t)];
+const ang=v=>Math.atan2(v[1],v[0]);
+const DEG=180/Math.PI;
+const f=(x,d=2)=>{if(!isFinite(x))return '—';const s=(Math.abs(x)<5e-10?0:x).toFixed(d);return (s==='-0.00'||/^-0\.?0*$/.test(s)?s.slice(1):s).replace('-','−')};
+const fv=(v,d=2)=>'('+v.map(x=>f(x,d)).join(', ')+')';
+const V=s=>`<span class="vec">${s}</span>`;
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const lerp=(a,b,t)=>a+(b-a)*t;
+const ALL=[];
+
+function runner(){let id=0;const r=seq=>{const my=++id;return seq(()=>my===id)};r.cancel=()=>{id++};return r}
+function tw(ms,fn,alive){return new Promise(res=>{const t0=performance.now();const step=now=>{if(alive&&!alive())return res(false);const t=Math.min(1,(now-t0)/ms);fn(ease(t),t);t<1?requestAnimationFrame(step):res(true)};requestAnimationFrame(step)})}
+const wait=(ms,alive)=>new Promise(r=>setTimeout(()=>r(!alive||alive()),ms));
+
+function drawArrowPx(ctx,x1,y1,x2,y2,color,o={}){
+  const w=o.w||2.6,dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);if(L<.5)return;
+  const ux=dx/L,uy=dy/L,hl=Math.min((o.head||1)*(9+w*2.3),L*.55),hw=hl*.42;
+  ctx.save();ctx.globalAlpha=o.alpha??1;ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=w;ctx.lineCap='round';
+  if(o.shadow!==false&&!o.dash){ctx.shadowColor='rgba(40,25,5,.18)';ctx.shadowBlur=5;ctx.shadowOffsetY=1.5}
+  if(o.dash)ctx.setLineDash(o.dash);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2-ux*hl*.7,y2-uy*hl*.7);ctx.stroke();ctx.setLineDash([]);
+  const bx=x2-ux*hl,by=y2-uy*hl;
+  ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(bx-uy*hw,by+ux*hw);ctx.lineTo(x2-ux*hl*.74,y2-uy*hl*.74);ctx.lineTo(bx+uy*hw,by-ux*hw);ctx.closePath();ctx.fill();
+  ctx.shadowColor='transparent';
+  if(o.tail!==false){ctx.beginPath();ctx.arc(x1,y1,Math.max(2,w*.85),0,7);ctx.fill()}
+  ctx.restore();
+}
+// Etichetă vectorială: „a × b”, „− b”, „G_t”. Literele primesc săgeată (sau ^ pentru versori).
+function vecLabel(ctx,label,px,py,color,mark='arrow',size=19){
+  const toks=String(label).split(' ').map(t=>{const isV=/^[A-Za-z](_.+)?$/.test(t);const [m,s]=t.split('_');return {isV,m:isV?m:t,s:isV?s:''}});
+  const fM=`italic 600 ${size}px "Source Serif 4", Georgia, serif`,fO=`400 ${size}px "Source Serif 4", Georgia, serif`,fS=`italic 600 ${Math.round(size*.64)}px "Source Serif 4", Georgia, serif`;
+  ctx.save();ctx.textBaseline='middle';ctx.textAlign='left';
+  let W=0;toks.forEach(t=>{ctx.font=t.isV?fM:fO;t.w=ctx.measureText(t.m).width+(t.isV?0:8);ctx.font=fS;t.ws=t.s?ctx.measureText(t.s).width+2:0;W+=t.w+t.ws});
+  let x=px-W/2;ctx.lineJoin='round';ctx.lineWidth=4.5;ctx.strokeStyle='rgba(251,248,241,.94)';ctx.fillStyle=color;
+  for(const t of toks){
+    ctx.font=t.isV?fM:fO;const tx=t.isV?x:x+4;ctx.strokeText(t.m,tx,py);ctx.fillText(t.m,tx,py);
+    if(t.s){ctx.font=fS;ctx.strokeText(t.s,x+t.w+1,py+size*.3);ctx.fillText(t.s,x+t.w+1,py+size*.3)}
+    if(t.isV){const ty=py-size*.68;ctx.save();ctx.strokeStyle=color;ctx.lineWidth=1.5;ctx.lineCap='round';ctx.beginPath();
+      if(mark==='hat'){const c=x+t.w/2+1.5;ctx.moveTo(c-4,ty+3);ctx.lineTo(c,ty-1.5);ctx.lineTo(c+4,ty+3)}
+      else{const xa=x+1.5,xb=x+t.w+2.5;ctx.moveTo(xa,ty);ctx.lineTo(xb,ty);ctx.moveTo(xb-4,ty-3);ctx.lineTo(xb,ty);ctx.lineTo(xb-4,ty+3)}
+      ctx.stroke();ctx.restore()}
+    x+=t.w+t.ws;
+  }
+  ctx.restore();
+}
+function txt(ctx,s,px,py,o={}){ctx.save();ctx.font=o.font||'italic 500 16px "Source Serif 4", Georgia, serif';ctx.fillStyle=o.color||COL.r;ctx.textAlign=o.align||'center';ctx.textBaseline='middle';ctx.lineWidth=4;ctx.strokeStyle='rgba(251,248,241,.92)';ctx.lineJoin='round';ctx.strokeText(s,px,py);ctx.fillText(s,px,py);ctx.restore()}
+
+/* ---------------- Planul 2D ---------------- */
+class Plane{
+  constructor(canvas,o={}){
+    this.c=canvas;this.ctx=canvas.getContext('2d');
+    this.o=Object.assign({unit:42,origin:[.5,.5],grid:true,axes:true,snap:.25,names:['x','y']},o);
+    this.draw=o.draw||(()=>{});this.handles=[];this.drag=null;this.hover=null;
+    new ResizeObserver(()=>this.resize()).observe(canvas);
+    canvas.addEventListener('pointerdown',e=>this.down(e));
+    canvas.addEventListener('pointermove',e=>this.move(e));
+    canvas.addEventListener('pointerup',()=>this.up());
+    canvas.addEventListener('pointercancel',()=>this.up());
+    canvas.addEventListener('pointerleave',()=>{if(!this.drag&&this.hover){this.hover=null;this.render()}});
+    ALL.push(this);
+  }
+  resize(){const r=this.c.getBoundingClientRect();if(!r.width)return;const d=Math.min(2,devicePixelRatio||1);this.w=r.width;this.h=r.height;this.c.width=Math.round(r.width*d);this.c.height=Math.round(r.height*d);this.ctx.setTransform(d,0,0,d,0,0);
+    this.u=this.o.unit*clamp(this.w/640,.62,1.15);this.ox=this.w*this.o.origin[0];this.oy=this.h*this.o.origin[1];this.render()}
+  P(x,y){return [this.ox+x*this.u,this.oy-y*this.u]}
+  W(px,py){return [(px-this.ox)/this.u,(this.oy-py)/this.u]}
+  loc(e){const r=this.c.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top]}
+  hit(px,py){let best=null,bd=20;for(const h of this.handles){const [x,y]=this.P(...h.get());const d=Math.hypot(px-x,py-y);if(d<bd){bd=d;best=h}}return best}
+  down(e){const [px,py]=this.loc(e);const h=this.hit(px,py);if(!h)return;this.drag=h;this.c.setPointerCapture(e.pointerId);this.c.style.cursor='grabbing';e.preventDefault();this.onGrab&&this.onGrab()}
+  move(e){const [px,py]=this.loc(e);
+    if(this.drag){let [x,y]=this.W(px,py);const s=this.o.snap;if(s){x=Math.round(x/s)*s;y=Math.round(y/s)*s}
+      const [x0,y0]=this.W(12,this.h-12),[x1,y1]=this.W(this.w-12,12);x=clamp(x,x0,x1);y=clamp(y,y0,y1);
+      this.drag.set(x,y);this.onChange?this.onChange():this.render();return}
+    const h=this.hit(px,py);if(h!==this.hover){this.hover=h;this.c.style.cursor=h?'grab':'default';this.render()}}
+  up(){if(this.drag){this.drag=null;this.c.style.cursor=this.hover?'grab':'default';this.render()}}
+  handle(get,set,color){this.handles.push({get,set,color});return this}
+  render(){if(!this.w)return;const ctx=this.ctx;ctx.clearRect(0,0,this.w,this.h);if(this.o.grid)this.grid();this.draw(this);this.drawHandles()}
+  grid(){
+    const {ctx,w,h,u}=this;const [x0,y0]=this.W(0,h),[x1,y1]=this.W(w,0);
+    const lines=(step,col)=>{ctx.strokeStyle=col;ctx.lineWidth=1;ctx.beginPath();
+      for(let i=Math.ceil(x0/step);i*step<=x1;i++){const px=Math.round(this.P(i*step,0)[0])+.5;ctx.moveTo(px,0);ctx.lineTo(px,h)}
+      for(let i=Math.ceil(y0/step);i*step<=y1;i++){const py=Math.round(this.P(0,i*step)[1])+.5;ctx.moveTo(0,py);ctx.lineTo(w,py)}ctx.stroke()};
+    lines(u>=34?.2:.5,'rgba(31,90,138,.055)');lines(1,'rgba(31,90,138,.15)');lines(5,'rgba(31,90,138,.22)');
+    if(!this.o.axes)return;
+    const [ox,oy]=this.P(0,0);ctx.strokeStyle='rgba(26,29,38,.62)';ctx.fillStyle='rgba(26,29,38,.62)';ctx.lineWidth=1.2;ctx.beginPath();
+    ctx.moveTo(0,Math.round(oy)+.5);ctx.lineTo(w-4,Math.round(oy)+.5);ctx.moveTo(Math.round(ox)+.5,h);ctx.lineTo(Math.round(ox)+.5,4);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(w-2,oy+.5);ctx.lineTo(w-11,oy-3.5);ctx.lineTo(w-11,oy+4.5);ctx.fill();
+    ctx.beginPath();ctx.moveTo(ox+.5,2);ctx.lineTo(ox-3.5,11);ctx.lineTo(ox+4.5,11);ctx.fill();
+    txt(ctx,this.o.names[0],w-12,oy+16,{font:'italic 600 15px "Source Serif 4", serif',color:'rgba(26,29,38,.7)'});
+    txt(ctx,this.o.names[1],ox-14,12,{font:'italic 600 15px "Source Serif 4", serif',color:'rgba(26,29,38,.7)'});
+    ctx.font='500 10px "JetBrains Mono", monospace';ctx.fillStyle='rgba(111,106,95,.85)';ctx.textAlign='center';ctx.textBaseline='top';
+    const st=u<34?2:1;
+    for(let i=Math.ceil(x0);i<=x1-.5;i++){if(!i||i%st)continue;const px=this.P(i,0)[0];ctx.fillText(String(i).replace('-','−'),px,oy+5);ctx.fillRect(px-.5,oy-3,1,6)}
+    ctx.textAlign='right';ctx.textBaseline='middle';
+    for(let i=Math.ceil(y0);i<=y1-.5;i++){if(!i||i%st)continue;const py=this.P(0,i)[1];ctx.fillText(String(i).replace('-','−'),ox-6,py);ctx.fillRect(ox-3,py-.5,6,1)}
+    ctx.textAlign='right';ctx.textBaseline='top';ctx.fillText('O',ox-5,oy+4);
+  }
+  drawHandles(){const ctx=this.ctx;for(const h of this.handles){const [x,y]=this.P(...h.get());const act=h===this.hover||h===this.drag;
+    if(act){ctx.beginPath();ctx.arc(x,y,15,0,7);ctx.fillStyle=h.color+'22';ctx.fill()}
+    ctx.beginPath();ctx.arc(x,y,act?7.5:6,0,7);ctx.fillStyle='#fffdf7';ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=h.color;ctx.stroke()}}
+  arrow(a,b,color,o={}){const [x1,y1]=this.P(...a),[x2,y2]=this.P(...b);drawArrowPx(this.ctx,x1,y1,x2,y2,color,o);
+    if(o.label){const L=Math.hypot(x2-x1,y2-y1);if(L<6)return;const t=o.at??.55,mx=lerp(x1,x2,t),my=lerp(y1,y2,t),nx=(y2-y1)/L,ny=-(x2-x1)/L,s=(o.side||1)*(o.off||17);
+      this.ctx.save();this.ctx.globalAlpha=o.alpha??1;vecLabel(this.ctx,o.label,mx+nx*s,my+ny*s,color,o.mark,o.size||19);this.ctx.restore()}}
+  line(a,b,color,o={}){const ctx=this.ctx,[x1,y1]=this.P(...a),[x2,y2]=this.P(...b);ctx.save();ctx.globalAlpha=o.alpha??1;ctx.strokeStyle=color;ctx.lineWidth=o.w||1.4;if(o.dash)ctx.setLineDash(o.dash);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore()}
+  poly(pts,color,alpha=.1,stroke){const ctx=this.ctx;ctx.save();ctx.beginPath();pts.forEach((p,i)=>{const [x,y]=this.P(...p);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.closePath();ctx.globalAlpha=alpha;ctx.fillStyle=color;ctx.fill();if(stroke){ctx.globalAlpha=1;ctx.strokeStyle=stroke;ctx.lineWidth=1.4;ctx.stroke()}ctx.restore()}
+  dot(p,color,r=3.5){const [x,y]=this.P(...p);this.ctx.beginPath();this.ctx.arc(x,y,r,0,7);this.ctx.fillStyle=color;this.ctx.fill()}
+  text(s,p,o={}){const [x,y]=this.P(...p);txt(this.ctx,s,x+(o.dx||0),y+(o.dy||0),o)}
+  arc(c,r,a0,a1,color,o={}){const ctx=this.ctx,[x,y]=this.P(...c);if(Math.abs(a1-a0)<1e-3)return;ctx.save();ctx.strokeStyle=color;ctx.lineWidth=o.w||1.4;ctx.globalAlpha=o.alpha??1;
+    if(o.fill){ctx.beginPath();ctx.moveTo(x,y);ctx.arc(x,y,r,-a0,-a1,a1>a0);ctx.closePath();ctx.fillStyle=color;ctx.globalAlpha=.1;ctx.fill();ctx.globalAlpha=o.alpha??1}
+    ctx.beginPath();ctx.arc(x,y,r,-a0,-a1,a1>a0);ctx.stroke();ctx.restore();
+    if(o.label){const m=(a0+a1)/2,R=r+(o.loff||13);txt(ctx,o.label,x+Math.cos(m)*R,y-Math.sin(m)*R,{color,font:'italic 600 15px "Source Serif 4", serif'})}}
+  right(p,d1,d2,s=10,color=COL.r){const [x,y]=this.P(...p),n1=norm(d1),n2=norm(d2);if(!n1||!n2)return;const a=[d1[0]/n1*s,-d1[1]/n1*s],b=[d2[0]/n2*s,-d2[1]/n2*s];
+    const ctx=this.ctx;ctx.save();ctx.strokeStyle=color;ctx.lineWidth=1.1;ctx.beginPath();ctx.moveTo(x+a[0],y+a[1]);ctx.lineTo(x+a[0]+b[0],y+a[1]+b[1]);ctx.lineTo(x+b[0],y+b[1]);ctx.stroke();ctx.restore()}
+}
+
+/* ---------------- Scena 3D (proiecție perspectivă) ---------------- */
+class View3D{
+  constructor(canvas,draw,o={}){
+    this.c=canvas;this.ctx=canvas.getContext('2d');this.draw=draw;this.o=o;
+    this.yaw0=o.yaw??-2.25;this.pitch0=o.pitch??.38;this.yaw=this.yaw0;this.pitch=this.pitch0;this.zoom=o.zoom||1;this.auto=!!o.auto;this.vis=false;this.dragging=null;
+    new ResizeObserver(()=>this.resize()).observe(canvas);
+    new IntersectionObserver(es=>{this.vis=es[0].isIntersecting;this.loop()}).observe(canvas);
+    canvas.style.cursor='grab';
+    canvas.addEventListener('pointerdown',e=>{this.dragging=[e.clientX,e.clientY];canvas.setPointerCapture(e.pointerId);canvas.style.cursor='grabbing'});
+    canvas.addEventListener('pointermove',e=>{if(!this.dragging)return;const [x,y]=this.dragging;this.yaw-=(e.clientX-x)*.009;this.pitch=clamp(this.pitch+(e.clientY-y)*.007,-.25,1.45);this.dragging=[e.clientX,e.clientY];this.render()});
+    const up=()=>{this.dragging=null;canvas.style.cursor='grab'};canvas.addEventListener('pointerup',up);canvas.addEventListener('pointercancel',up);
+    ALL.push(this);
+  }
+  setAuto(v){this.auto=v;this.loop()}
+  loop(){if(this.raf||!this.auto||!this.vis)return;const step=()=>{this.raf=null;if(!this.auto||!this.vis)return;if(!this.dragging)this.yaw+=.0045;this.render();this.raf=requestAnimationFrame(step)};this.raf=requestAnimationFrame(step)}
+  resize(){const r=this.c.getBoundingClientRect();if(!r.width)return;const d=Math.min(2,devicePixelRatio||1);this.w=r.width;this.h=r.height;this.c.width=Math.round(r.width*d);this.c.height=Math.round(r.height*d);this.ctx.setTransform(d,0,0,d,0,0);
+    this.s=Math.min(this.w,this.h*1.15)/10.5*this.zoom;this.cx=this.w/2;this.cy=this.h*(this.o.cy||.6);this.render()}
+  P(p){const [x,y,z]=p,cy=Math.cos(this.yaw),sy=Math.sin(this.yaw),x1=x*cy-y*sy,y1=x*sy+y*cy,cp=Math.cos(this.pitch),sp=Math.sin(this.pitch),d=y1*cp-z*sp,z2=y1*sp+z*cp,k=16/(16+d);
+    return [this.cx+x1*this.s*k,this.cy-z2*this.s*k,d,k]}
+  render(){if(!this.w)return;this.ctx.clearRect(0,0,this.w,this.h);this.draw(this)}
+  line(a,b,color,o={}){const ctx=this.ctx,[x1,y1]=this.P(a),[x2,y2]=this.P(b);ctx.save();ctx.globalAlpha=o.alpha??1;ctx.strokeStyle=color;ctx.lineWidth=o.w||1.2;if(o.dash)ctx.setLineDash(o.dash);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore()}
+  arrow(a,b,color,o={}){const [x1,y1]=this.P(a),[x2,y2,,k]=this.P(b);drawArrowPx(this.ctx,x1,y1,x2,y2,color,Object.assign({},o,{w:(o.w||2.8)*clamp(k,.75,1.3)}));
+    if(o.label){const L=Math.hypot(x2-x1,y2-y1);if(L<8)return;const ux=(x2-x1)/L,uy=(y2-y1)/L;vecLabel(this.ctx,o.label,x2+ux*20+(o.dx||0),y2+uy*20+(o.dy||0),color,o.mark,o.size||19)}}
+  poly(pts,color,alpha=.12,stroke,o={}){const ctx=this.ctx;ctx.save();ctx.beginPath();pts.forEach((p,i)=>{const [x,y]=this.P(p);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.closePath();ctx.globalAlpha=alpha;ctx.fillStyle=color;ctx.fill();if(stroke){ctx.globalAlpha=o.salpha??.7;ctx.strokeStyle=stroke;ctx.lineWidth=1;if(o.dash)ctx.setLineDash(o.dash);ctx.stroke()}ctx.restore()}
+  text(s,p,o={}){const [x,y]=this.P(p);txt(this.ctx,s,x+(o.dx||0),y+(o.dy||0),o)}
+  path(pts,color,o={}){const ctx=this.ctx;ctx.save();ctx.strokeStyle=color;ctx.lineWidth=o.w||1.6;ctx.globalAlpha=o.alpha??1;if(o.dash)ctx.setLineDash(o.dash);ctx.beginPath();pts.forEach((p,i)=>{const [x,y]=this.P(p);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();ctx.restore();
+    if(o.head&&pts.length>2){const [x1,y1]=this.P(pts[pts.length-3]),[x2,y2]=this.P(pts[pts.length-1]);drawArrowPx(ctx,x1,y1,x2,y2,color,{w:o.w||1.6,tail:false,shadow:false})}}
+  grid(n=4){for(let i=-n;i<=n;i++){const a=i%2===0?.16:.08;this.line([i,-n,0],[i,n,0],COL.b,{alpha:a,w:1});this.line([-n,i,0],[n,i,0],COL.b,{alpha:a,w:1})}}
+  axes(L=4.4){const names=['x','y','z'];for(let i=0;i<3;i++){const e=[0,0,0],m=[0,0,0];e[i]=L;m[i]=-L*.6;this.line([0,0,0],m,COL.r,{alpha:.35,dash:[3,4]});
+    const [x1,y1]=this.P([0,0,0]),[x2,y2]=this.P(e);drawArrowPx(this.ctx,x1,y1,x2,y2,'rgba(26,29,38,.55)',{w:1.2,tail:false,shadow:false,head:.8});
+    const q=[0,0,0];q[i]=L+.45;this.text(names[i],q,{font:'italic 600 15px "Source Serif 4", serif',color:'rgba(26,29,38,.75)'})}
+    const [ox,oy]=this.P([0,0,0]);txt(this.ctx,'O',ox-10,oy+10,{font:'500 11px "JetBrains Mono", monospace',color:COL.muted})}
+}
+
+/* --------- legături comune pentru butoane ---------- */
+function bind(root,handlers){root.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!root.contains(b))return;
+  if(b.dataset.t){b.classList.toggle('on');handlers.toggle&&handlers.toggle(b.dataset.t,b.classList.contains('on'),b)}
+  else if(b.dataset.act){handlers[b.dataset.act]&&handlers[b.dataset.act](b)}
+  else handlers.other&&handlers.other(b)})}
+function out(root,map){for(const k in map){const el=root.querySelector(`[data-o="${k}"]`);if(el)el.innerHTML=map[k]}}
+function sliders(root,cb){$$('input[type=range]',root).forEach(inp=>inp.addEventListener('input',()=>cb(inp.dataset.s,+inp.value,inp)))}
+function setSlider(root,key,val,label){const i=root.querySelector(`[data-s="${key}"]`);if(i)i.value=val;const o=root.querySelector(`[data-so="${key}"]`);if(o)o.textContent=label}
+
+/* =====================================================================
+   Fig. 1 — elementele vectorului
+   ===================================================================== */
+(()=>{const root=$('#fig1'),run=runner();
+  const init=()=>({A:[-3,-1.5],B:[2.5,2],comp:true,ang:true,ghost:null});let st=init();
+  const pl=new Plane($('canvas',root),{unit:42,draw});
+  pl.handle(()=>st.A,(x,y)=>st.A=[x,y],COL.r).handle(()=>st.B,(x,y)=>st.B=[x,y],COL.a);
+  pl.onChange=update;pl.onGrab=()=>{run.cancel();st.ghost=null};
+  function draw(p){const {A,B}=st,v=sub(B,A),th=ang(v);
+    if(st.comp&&norm(v)>.01){p.line(A,[B[0],A[1]],COL.o,{dash:[5,5],w:1.5});p.line([B[0],A[1]],B,COL.o,{dash:[5,5],w:1.5});
+      p.text('Δx',[(A[0]+B[0])/2,A[1]],{color:COL.o,dy:v[1]>=0?15:-15});p.text('Δy',[B[0],(A[1]+B[1])/2],{color:COL.o,dx:v[0]>=0?20:-20});
+      if(Math.abs(v[0])>.3&&Math.abs(v[1])>.3)p.right([B[0],A[1]],[-v[0],0],[0,v[1]],9,COL.o)}
+    if(st.ang&&norm(v)>.01){p.line(A,[A[0]+1.9,A[1]],COL.r,{dash:[2,4],alpha:.6});p.arc(A,38,0,th,COL.plum,{label:'θ',loff:14,fill:true})}
+    // dreapta suport
+    const u=mul(v,1/(norm(v)||1));p.line(sub(A,mul(u,30)),add(B,mul(u,30)),COL.a,{alpha:.18,dash:[1,5]});
+    if(st.ghost){const g=st.ghost,mid=add(mul(add(A,B),.5),[g.dx,g.dy]),h=rot2(mul(v,.5),g.rot);p.arrow(sub(mid,h),add(mid,h),g.color,{w:2.8,label:g.label,alpha:g.alpha,side:-1})}
+    p.arrow(A,B,COL.a,{w:3.2,label:'v',size:21});
+    p.dot(A,COL.r,4.5);p.text('A',A,{dx:-15,dy:15,font:'italic 600 17px "Source Serif 4", serif'});
+    const L=norm(v)||1;p.text('B',B,{dx:v[0]/L*20,dy:-v[1]/L*20,font:'italic 600 17px "Source Serif 4", serif'});
+  }
+  function update(){const v=sub(st.B,st.A);out(root,{mod:f(norm(v)),dx:f(v[0]),dy:f(v[1]),th:f(ang(v)*DEG,1)+'°'});pl.render()}
+  bind(root,{
+    toggle:(k,on)=>{st[k]=on;update()},
+    reset:()=>{run.cancel();st=init();$$('[data-t]',root).forEach(b=>b.classList.add('on'));out(root,{note:'Punctul A este originea (punctul de aplicație), B este vârful.'});update()},
+    equal:()=>run(async al=>{const v=sub(st.B,st.A),L=norm(v)||1,n=[-v[1]/L,v[0]/L];const tx=n[0]*2.2,ty=n[1]*2.2;
+      st.ghost={dx:0,dy:0,rot:0,alpha:.95,color:COL.b,label:'u'};
+      out(root,{note:`Translatăm vectorul: ${V('u')} = ${V('v')} — același modul, aceeași direcție, același sens. Vectorii liberi pot fi mutați paralel cu ei înșiși.`});
+      await tw(1100,t=>{st.ghost.dx=tx*t;st.ghost.dy=ty*t;pl.render()},al)}),
+    opp:()=>run(async al=>{const v=sub(st.B,st.A),L=norm(v)||1,n=[v[1]/L,-v[0]/L];const tx=n[0]*2.2,ty=n[1]*2.2;
+      st.ghost={dx:0,dy:0,rot:0,alpha:.95,color:COL.plum,label:'− v'};
+      out(root,{note:`Vectorul opus ${'−'+V('v')}: același modul și aceeași direcție, sens contrar. ${V('v')} + (−${V('v')}) = ${V('0')}.`});
+      if(!await tw(800,t=>{st.ghost.dx=tx*t;st.ghost.dy=ty*t;pl.render()},al))return;
+      await tw(1100,t=>{st.ghost.rot=Math.PI*t;pl.render()},al)})
+  });
+  update();
+})();
+
+/* =====================================================================
+   Fig. 2 — componente și versori
+   ===================================================================== */
+(()=>{const root=$('#fig2'),run=runner();let st={v:[3.5,2.5],p:1,hat:false,ver:true};
+  const pl=new Plane($('canvas',root),{unit:46,origin:[.4,.62],draw,snap:.25});
+  pl.handle(()=>st.v,(x,y)=>st.v=[x,y],COL.c);pl.onChange=update;pl.onGrab=()=>{run.cancel();st.p=1};
+  function draw(p){const v=st.v,t1=clamp(st.p*2,0,1),t2=clamp(st.p*2-1,0,1);
+    if(t1>0){p.line(v,[lerp(v[0],v[0],t1),lerp(v[1],0,t1)],COL.a,{dash:[5,5],w:1.4,alpha:.8});p.line(v,[lerp(v[0],0,t1),v[1]],COL.b,{dash:[5,5],w:1.4,alpha:.8})}
+    if(t1>=1&&Math.abs(v[0])>.2&&Math.abs(v[1])>.2){p.right([v[0],0],[-v[0],0],[0,v[1]],9,COL.a);}
+    if(t2>0){p.arrow([0,0],[v[0]*t2,0],COL.a,{w:3,label:'v_x',side:v[1]>=0?-1:1,alpha:.95});p.arrow([0,0],[0,v[1]*t2],COL.b,{w:3,label:'v_y',side:v[0]>=0?1:-1,alpha:.95})}
+    if(norm(v)>.05)p.arc([0,0],34,0,ang(v),COL.plum,{label:'α',fill:true});
+    p.arrow([0,0],v,COL.c,{w:3.4,label:'v',size:21});
+    if(st.ver){p.arrow([0,0],[1,0],COL.r,{w:3.6,label:'i',side:-1,off:14,head:1.1});p.arrow([0,0],[0,1],COL.r,{w:3.6,label:'j',side:1,off:14,head:1.1})}
+    if(st.hat&&norm(v)>.05){const u=mul(v,1/norm(v));p.arrow([0,0],u,COL.o,{w:5,label:'v',mark:'hat',side:-1,off:16,head:1.2})}
+    p.text(`(${f(v[0])}; ${f(v[1])})`,v,{dx:v[0]>=0?42:-42,dy:-14,font:'500 12px "JetBrains Mono", monospace',color:COL.c});
+  }
+  function update(){const v=st.v,m=norm(v);out(root,{eq:`${V('v')} = ${f(v[0])}·${V('i')} ${v[1]<0?'−':'+'} ${f(Math.abs(v[1]))}·${V('j')}`,mod:f(m),al:f(ang(v)*DEG,1)+'°',hat:m?fv(mul(v,1/m),3):'nedefinit'});pl.render()}
+  bind(root,{toggle:(k,on)=>{st[k]=on;update()},
+    anim:()=>run(async al=>{st.p=0;pl.render();await wait(200,al)&&await tw(2200,t=>{st.p=t;pl.render()},al)}),
+    reset:()=>{run.cancel();st.v=[3.5,2.5];st.p=1;update()}});
+  update();
+})();
+
+/* =====================================================================
+   Fig. 3 — adunarea
+   ===================================================================== */
+(()=>{const root=$('#fig3'),run=runner();let st={a:[3.5,1],b:[1.25,2.75],mode:'par',p:2,comm:false};
+  const pl=new Plane($('canvas',root),{unit:44,origin:[.3,.68],draw});
+  pl.handle(()=>st.a,(x,y)=>st.a=[x,y],COL.a);
+  pl.handle(()=>st.mode==='tri'&&st.p>=1?add(st.a,st.b):st.b,(x,y)=>st.b=st.mode==='tri'&&st.p>=1?sub([x,y],st.a):[x,y],COL.b);
+  pl.onChange=update;pl.onGrab=()=>{run.cancel();st.p=2};
+  function draw(p){const {a,b}=st,R=add(a,b),t1=clamp(st.p,0,1),t2=clamp(st.p-1,0,1),O=[0,0];
+    // unghiul dintre vectori
+    const a0=ang(a),d=Math.atan2(a[0]*b[1]-a[1]*b[0],dot(a,b));
+    if(norm(a)>.05&&norm(b)>.05)p.arc(O,30,a0,a0+d,COL.plum,{label:'α',fill:true});
+    if(st.mode==='par'){
+      if(st.p>=2)p.poly([O,a,R,b],COL.o,.09);
+      p.line(a,add(a,mul(b,t1)),COL.b,{dash:[6,5],w:1.5,alpha:.85});p.line(b,add(b,mul(a,t1)),COL.a,{dash:[6,5],w:1.5,alpha:.85});
+      p.arrow(O,a,COL.a,{w:3,label:'a',side:-1});p.arrow(O,b,COL.b,{w:3,label:'b'});
+    }else{
+      const s=mul(a,t1);if(t1>0)p.arrow(O,b,COL.b,{w:2,alpha:.2,dash:[5,4]});
+      if(st.p>=2)p.poly([O,a,R],COL.o,.09);
+      p.arrow(O,a,COL.a,{w:3,label:'a',side:-1});p.arrow(s,add(s,b),COL.b,{w:3,label:'b',side:-1});
+    }
+    if(st.comm&&st.p>=2){p.arrow(b,R,COL.a,{w:2,alpha:.45,dash:[6,4],label:'a',side:1});if(st.mode==='tri')p.arrow(O,b,COL.b,{w:2,alpha:.45,dash:[6,4]})}
+    if(t2>0)p.arrow(O,mul(R,t2),COL.r,{w:3.6,label:'R',size:21,at:.5,side:st.mode==='par'?1:1});
+    if(t2>=1)p.text(st.comm?'a + b = b + a':'R = a + b',R,{dx:0,dy:-24,font:'italic 500 14px "Source Serif 4", serif'});
+  }
+  function update(){const {a,b}=st,R=add(a,b),A=norm(a),B=norm(b),al=Math.acos(clamp(dot(a,b)/(A*B||1),-1,1));
+    out(root,{R:fv(R),Rm:f(norm(R)),al:f(al*DEG,1)+'°',Rf:f(Math.sqrt(A*A+B*B+2*A*B*Math.cos(al)))});pl.render()}
+  bind(root,{toggle:(k,on)=>{st[k]=on;update()},
+    other:b=>{if(b.dataset.mode){$$('[data-mode]',root).forEach(x=>x.classList.toggle('on',x===b));st.mode=b.dataset.mode;anim()}},
+    anim:()=>anim(),
+    reset:()=>{run.cancel();st.a=[3.5,1];st.b=[1.25,2.75];st.p=2;update()}});
+  function anim(){return run(async al=>{st.p=0;pl.render();if(!await wait(250,al))return;if(!await tw(1300,t=>{st.p=t;pl.render()},al))return;await wait(150,al)&&await tw(1100,t=>{st.p=1+t;pl.render()},al)})}
+  update();
+})();
+
+/* =====================================================================
+   Fig. 4 — regula poligonului
+   ===================================================================== */
+(()=>{const root=$('#fig4'),run=runner();let st={vs:[[3,.5],[1,2.5],[-2.5,1.5],[-1,-1.5]],t:[1,1,1,1],rp:1};
+  const pl=new Plane($('canvas',root),{unit:40,origin:[.38,.62],draw});
+  pl.onChange=update;pl.onGrab=()=>{run.cancel();st.t=st.t.map(()=>1);st.rp=1};
+  const starts=()=>{let s=[0,0];return st.vs.map((v,i)=>{const o=mul(s,st.t[i]);s=add(s,v);return o})};
+  const sum=()=>st.vs.reduce((s,v)=>add(s,v),[0,0]);
+  function rebuild(){pl.handles=st.vs.map((v,i)=>({get:()=>add(starts()[i],st.vs[i]),set:(x,y)=>{st.vs[i]=sub([x,y],starts()[i])},color:PAL[i%6]}))}
+  function draw(p){const S=starts(),R=sum(),closed=norm(R)<.05;
+    if(st.t.every(x=>x>=1)&&st.rp>=1){const pts=[[0,0]];let s=[0,0];st.vs.forEach(v=>{s=add(s,v);pts.push(s)});p.poly(pts,COL.o,.07)}
+    st.vs.forEach((v,i)=>{if(st.t[i]>0)p.arrow([0,0],v,PAL[i%6],{w:1.8,alpha:.18,dash:[4,4]})});
+    st.vs.forEach((v,i)=>p.arrow(S[i],add(S[i],v),PAL[i%6],{w:3,label:'F_'+(i+1)}));
+    if(st.rp>0&&!closed)p.arrow([0,0],mul(R,st.rp),COL.r,{w:3.8,label:'R',size:21,side:-1});
+    if(st.rp>=1&&closed){p.dot([0,0],COL.c,6);p.text('R = 0',[0,0],{dx:34,dy:20,color:COL.c,font:'italic 600 16px "Source Serif 4", serif'})}
+  }
+  function update(){const R=sum(),closed=norm(R)<.05;out(root,{n:st.vs.length,rx:f(R[0]),ry:f(R[1]),rm:f(norm(R)),
+    st:closed?'<span style="color:var(--c)">Poligon închis → R = 0 → punctul material este în echilibru.</span>':'Poligon deschis → rezultanta nenulă accelerează punctul material.'});pl.render()}
+  const rv=()=>{let v;do{v=[Math.round(Math.random()*12-6)/2,Math.round(Math.random()*12-6)/2]}while(norm(v)<1.2);return v};
+  bind(root,{
+    anim:()=>run(async al=>{st.t=st.t.map(()=>0);st.rp=0;pl.render();if(!await wait(400,al))return;
+      for(let i=0;i<st.vs.length;i++){if(i===0){st.t[0]=1;continue}if(!await tw(750,t=>{st.t[i]=t;pl.render()},al))return}
+      await tw(900,t=>{st.rp=t;pl.render()},al)}),
+    add:()=>{if(st.vs.length>=6)return;run.cancel();st.vs.push(rv());st.t=st.vs.map(()=>1);st.rp=1;rebuild();update()},
+    rem:()=>{if(st.vs.length<=2)return;run.cancel();st.vs.pop();st.t=st.vs.map(()=>1);st.rp=1;rebuild();update()},
+    rand:()=>{run.cancel();const n=3+Math.floor(Math.random()*3);st.vs=Array.from({length:n},rv);st.t=st.vs.map(()=>1);st.rp=1;rebuild();update()},
+    eq:()=>run(async al=>{st.t=st.t.map(()=>1);st.rp=1;const n=st.vs.length-1,from=st.vs[n].slice(),others=st.vs.slice(0,n).reduce((s,v)=>add(s,v),[0,0]),to=mul(others,-1);
+      await tw(1200,t=>{st.vs[n]=[lerp(from[0],to[0],t),lerp(from[1],to[1],t)];update()},al)})
+  });
+  rebuild();update();
+})();
+
+/* =====================================================================
+   Fig. 5 — scăderea
+   ===================================================================== */
+(()=>{const root=$('#fig5'),run=runner();let st={a:[3.25,2.5],b:[3,-1],mode:'m1',p:3};
+  const pl=new Plane($('canvas',root),{unit:40,origin:[.42,.55],draw});
+  pl.handle(()=>st.a,(x,y)=>st.a=[x,y],COL.a).handle(()=>st.b,(x,y)=>st.b=[x,y],COL.b);
+  pl.onChange=update;pl.onGrab=()=>{run.cancel();st.p=st.mode==='m1'?3:1};
+  function draw(p){const {a,b}=st,d=sub(a,b),O=[0,0];
+    const a0=ang(a),dd=Math.atan2(a[0]*b[1]-a[1]*b[0],dot(a,b));if(norm(a)>.05&&norm(b)>.05)p.arc(O,28,a0,a0+dd,COL.plum,{label:'α',fill:true});
+    p.arrow(O,a,COL.a,{w:3,label:'a'});p.arrow(O,b,COL.b,{w:3,label:'b',side:-1});
+    if(st.mode==='m1'){const t1=clamp(st.p,0,1),t2=clamp(st.p-1,0,1),t3=clamp(st.p-2,0,1);
+      if(st.p>0){const nb=rot2(b,Math.PI*t1),o=mul(a,t2);p.arrow(o,add(o,nb),COL.plum,{w:2.8,label:t1>.5?'− b':'',side:1});
+        if(t2>=1)p.poly([O,a,d],COL.o,.08)}
+      if(t3>0)p.arrow(O,mul(d,t3),COL.r,{w:3.6,label:'d',size:21,side:-1});
+    }else{const t=clamp(st.p,0,1);
+      if(t>0){p.poly([O,b,a],COL.o,.08*t);p.arrow(b,add(b,mul(d,t)),COL.r,{w:3.6,label:'a − b',side:-1});
+        if(t>=1)p.arrow(O,d,COL.r,{w:2,alpha:.4,dash:[6,4],label:'d',side:1})}}
+  }
+  function update(){const {a,b}=st,A=norm(a),B=norm(b),al=Math.acos(clamp(dot(a,b)/(A*B||1),-1,1));
+    out(root,{d:fv(sub(a,b)),dm:f(norm(sub(a,b))),al:f(al*DEG,1)+'°',df:f(Math.sqrt(Math.max(0,A*A+B*B-2*A*B*Math.cos(al))))});pl.render()}
+  bind(root,{
+    m1:()=>run(async al=>{st.mode='m1';st.p=0;pl.render();if(!await wait(300,al))return;
+      for(let k=0;k<3;k++){if(!await tw(1000,t=>{st.p=k+t;pl.render()},al))return;if(!await wait(250,al))return}}),
+    m2:()=>run(async al=>{st.mode='m2';st.p=0;pl.render();await wait(300,al)&&await tw(1300,t=>{st.p=t;pl.render()},al)}),
+    reset:()=>{run.cancel();st={a:[3.25,2.5],b:[3,-1],mode:'m1',p:3};update()}});
+  update();
+})();
+
+/* =====================================================================
+   Fig. 6 — înmulțirea cu un scalar
+   ===================================================================== */
+(()=>{const root=$('#fig6'),run=runner();let st={a:[2,1],k:1.5};
+  const pl=new Plane($('canvas',root),{unit:38,draw});
+  pl.handle(()=>st.a,(x,y)=>st.a=[x,y],COL.r);pl.onChange=update;pl.onGrab=()=>run.cancel();
+  function draw(p){const a=st.a,ka=mul(a,st.k),u=mul(a,1/(norm(a)||1)),c=st.k>=0?COL.c:COL.a;
+    p.line(mul(u,-40),mul(u,40),COL.r,{alpha:.22,dash:[1,5]});
+    const n=[-u[1]*.12,u[0]*.12];
+    if(Math.abs(st.k)>.01)p.arrow(n,add(n,ka),c,{w:5,alpha:.88,label:'k · a',side:-1,off:20});else p.dot([0,0],COL.a,6);
+    p.arrow([0,0],a,COL.r,{w:2.2,label:'a',side:1});
+    // repere pe dreapta suport
+    for(let i=-3;i<=3;i++){if(!i)continue;const q=mul(a,i),[x,y]=pl.P(...q);pl.ctx.fillStyle='rgba(26,29,38,.35)';pl.ctx.beginPath();pl.ctx.arc(x,y,2,0,7);pl.ctx.fill()}
+  }
+  function update(){const ka=mul(st.a,st.k);out(root,{ka:fv(ka),km:`${f(Math.abs(st.k))} × ${f(norm(st.a))} = ${f(norm(ka))}`,
+    sens:st.k>0?`<span style="color:var(--c)">k > 0 → același sens cu ${V('a')}</span>${Math.abs(st.k)<1?' (vector „comprimat”)':Math.abs(st.k)>1?' (vector „alungit”)':''}`:st.k<0?`<span style="color:var(--a)">k < 0 → sens opus lui ${V('a')}</span>`:`k = 0 → vectorul nul ${V('0')}`});
+    setSlider(root,'k',st.k,f(st.k,1));pl.render()}
+  sliders(root,(k,v)=>{run.cancel();st.k=v;update()});
+  bind(root,{anim:()=>run(async al=>{const seq=[[st.k,-2.5,1100],[-2.5,2.5,2200],[2.5,1.5,700]];for(const [a,b,ms] of seq)if(!await tw(ms,t=>{st.k=Math.round(lerp(a,b,t)*100)/100;update()},al))return}),
+    other:b=>{if(b.dataset.k!==undefined){const from=st.k,to=+b.dataset.k;run(async al=>tw(600,t=>{st.k=lerp(from,to,t);update()},al))}}});
+  update();
+})();
+
+/* =====================================================================
+   Fig. 7 — planul înclinat
+   ===================================================================== */
+(()=>{const root=$('#fig7'),run=runner();let st={al:30,m:2,p:2,N:false};
+  const pl=new Plane($('canvas',root),{unit:54,origin:[.5,.5],axes:false,draw});
+  function draw(p){const al=st.al/DEG,W=al>0?Math.min(9.6,5.2/Math.tan(al)):9.6,H=W*Math.tan(al),y0=-3.7,P0=[-W/2,y0],P1=[W/2,y0],P2=[W/2,y0+H];
+    const ctx=p.ctx;
+    // sol hașurat
+    p.line([-7.5,y0],[7.5,y0],COL.r,{w:1.6});
+    for(let x=-7.5;x<7.5;x+=.3)p.line([x,y0],[x-.3,y0-.3],COL.r,{alpha:.4,w:1});
+    p.poly([P0,P1,P2],'#e3d9c3',1,COL.r);
+    if(al>.02){p.arc(P0,44,0,al,COL.plum,{label:'α',loff:14,fill:true});p.right(P1,[-1,0],[0,1],10)}
+    const u=[Math.cos(al),Math.sin(al)],n=[-Math.sin(al),Math.cos(al)],L=W/Math.cos(al),s=.6;
+    const C=add(add(P0,mul(u,L*.52)),mul(n,s));
+    const corners=[add(add(C,mul(u,-s)),mul(n,-s)),add(add(C,mul(u,s)),mul(n,-s)),add(add(C,mul(u,s)),mul(n,s)),add(add(C,mul(u,-s)),mul(n,s))];
+    p.poly(corners,'#fbf8f1',1,COL.r);
+    const g=2.9,G=[0,-g],Gt=mul(u,-g*Math.sin(al)),Gn=mul(n,-g*Math.cos(al));const t1=clamp(st.p,0,1),t2=clamp(st.p-1,0,1);
+    // direcțiile de descompunere
+    p.line(add(C,mul(u,-4)),add(C,mul(u,3)),COL.a,{alpha:.25,dash:[2,5]});p.line(add(C,mul(n,2)),add(C,mul(n,-4.2)),COL.b,{alpha:.25,dash:[2,5]});
+    const Gp=add(C,G);
+    if(t1>0){p.line(Gp,add(Gp,mul(Gn,-t1)),COL.a,{dash:[5,5],w:1.4});p.line(Gp,add(Gp,mul(Gt,-t1)),COL.b,{dash:[5,5],w:1.4})}
+    if(t2>0){p.arrow(C,add(C,mul(Gt,t2)),COL.a,{w:3.2,label:'G_t',side:1});p.arrow(C,add(C,mul(Gn,t2)),COL.b,{w:3.2,label:'G_n',side:-1});
+      if(t2>=1&&al>.05)p.right(C,Gt,Gn,10)}
+    if(st.N)p.arrow(C,add(C,mul(n,g*Math.cos(al))),COL.c,{w:3.2,label:'N',side:-1});
+    p.arrow(C,Gp,COL.r,{w:3.6,label:'G',size:21,side:-1,at:.7});
+    if(al>.05&&t2>=1)p.arc(C,92,-Math.PI/2,al-Math.PI/2,COL.plum,{label:'α',loff:12});
+    p.dot(C,COL.r,3.5);
+  }
+  function update(){const al=st.al/DEG,G=st.m*9.81;out(root,{G:f(G)+' N',Gt:f(G*Math.sin(al))+' N',Gn:f(G*Math.cos(al))+' N',chk:f(Math.hypot(G*Math.sin(al),G*Math.cos(al)))+' N'});
+    setSlider(root,'al',st.al,st.al+'°');setSlider(root,'m',st.m,f(st.m,1)+' kg');pl.render()}
+  sliders(root,(k,v)=>{st[k]=v;update()});
+  bind(root,{toggle:(k,on)=>{st[k]=on;update()},anim:()=>run(async al=>{st.p=0;pl.render();if(!await wait(250,al))return;if(!await tw(1100,t=>{st.p=t;pl.render()},al))return;await tw(1100,t=>{st.p=1+t;pl.render()},al)})});
+  update();
+})();
+
+/* =====================================================================
+   Fig. 8 — produsul scalar
+   ===================================================================== */
+(()=>{const root=$('#fig8'),run=runner();let st={a:[3.5,.75],b:[1.5,2.75]};
+  const [cv,mini]=$$('canvas',root);const pl=new Plane(cv,{unit:46,origin:[.34,.66],draw});
+  pl.handle(()=>st.a,(x,y)=>st.a=[x,y],COL.a).handle(()=>st.b,(x,y)=>st.b=[x,y],COL.b);
+  pl.onChange=update;pl.onGrab=()=>run.cancel();
+  function draw(p){const {a,b}=st,A=norm(a)||1,u=mul(a,1/A),pr=dot(b,u),F=mul(u,pr),O=[0,0];
+    p.line(mul(u,-30),mul(u,30),COL.a,{alpha:.25,dash:[1,5]});
+    const c=Math.abs(pr)<.02?COL.o:pr>0?COL.c:COL.a;
+    p.line(O,F,c,{w:9,alpha:.32});
+    p.line(b,F,COL.b,{dash:[5,5],w:1.4});if(Math.abs(pr)>.15&&norm(sub(b,F))>.15)p.right(F,mul(u,-Math.sign(pr)),sub(b,F),9,COL.b);
+    const a0=ang(a),d=Math.atan2(a[0]*b[1]-a[1]*b[0],dot(a,b));p.arc(O,34,a0,a0+d,COL.plum,{label:'θ',fill:true});
+    p.arrow(O,a,COL.a,{w:3,label:'a',side:-1});p.arrow(O,b,COL.b,{w:3,label:'b'});
+    if(Math.abs(pr)>.3)p.text('pr = b cos θ',mul(F,.4),{dy:36,color:c,font:'italic 500 13px "Source Serif 4", serif'});
+  }
+  // mini-grafic: a·b în funcție de θ
+  const mc=mini.getContext('2d');let mw=0,mh=0;
+  new ResizeObserver(()=>{const r=mini.getBoundingClientRect();const d=Math.min(2,devicePixelRatio||1);mw=r.width;mh=r.height;mini.width=mw*d;mini.height=mh*d;mc.setTransform(d,0,0,d,0,0);drawMini()}).observe(mini);
+  function drawMini(){if(!mw)return;const {a,b}=st,A=norm(a),B=norm(b),th=Math.acos(clamp(dot(a,b)/(A*B||1),-1,1)),L=44,R=mw-20,T=16,Bm=mh-22,mid=(T+Bm)/2,amp=(Bm-T)/2;
+    mc.clearRect(0,0,mw,mh);mc.strokeStyle='rgba(26,29,38,.4)';mc.lineWidth=1;mc.beginPath();mc.moveTo(L,mid+.5);mc.lineTo(R,mid+.5);mc.moveTo(L+.5,T);mc.lineTo(L+.5,Bm);mc.stroke();
+    mc.font='500 10px "JetBrains Mono", monospace';mc.fillStyle=COL.muted;mc.textAlign='center';mc.textBaseline='top';
+    [0,45,90,135,180].forEach(g=>{const x=L+(R-L)*g/180;mc.fillText(g+'°',x,Bm+5);mc.fillRect(x-.5,mid-3,1,6)});
+    mc.textAlign='right';mc.textBaseline='middle';mc.fillText('+ab',L-6,T+2);mc.fillText('0',L-6,mid);mc.fillText('−ab',L-6,Bm-2);
+    mc.save();mc.beginPath();for(let i=0;i<=120;i++){const t=Math.PI*i/120,x=L+(R-L)*i/120,y=mid-Math.cos(t)*amp;i?mc.lineTo(x,y):mc.moveTo(x,y)}mc.strokeStyle=COL.b;mc.lineWidth=2;mc.stroke();mc.restore();
+    const x=L+(R-L)*th/Math.PI,y=mid-Math.cos(th)*amp;mc.setLineDash([3,3]);mc.strokeStyle=COL.plum;mc.beginPath();mc.moveTo(x,mid);mc.lineTo(x,y);mc.stroke();mc.setLineDash([]);
+    mc.beginPath();mc.arc(x,y,5.5,0,7);mc.fillStyle=Math.cos(th)>.01?COL.c:Math.cos(th)<-.01?COL.a:COL.o;mc.fill();mc.strokeStyle='#fff';mc.lineWidth=2;mc.stroke();
+    mc.font='italic 600 13px "Source Serif 4", serif';mc.fillStyle=COL.r;mc.textAlign='left';mc.fillText('a·b = ab cos θ',R-110,T+4);}
+  function update(){const {a,b}=st,A=norm(a),B=norm(b),c=dot(a,b)/(A*B||1),th=Math.acos(clamp(c,-1,1));
+    const s=Math.abs(dot(a,b))<.02?'<span style="color:var(--o)">θ = 90° → vectorii sunt perpendiculari, produsul scalar este nul.</span>':dot(a,b)>0?'<span style="color:var(--c)">θ ascuțit → produs scalar pozitiv.</span>':'<span style="color:var(--a)">θ obtuz → produs scalar negativ.</span>';
+    out(root,{th:f(th*DEG,1)+'°',d1:f(A*B*Math.cos(th)),d2:f(dot(a,b)),pr:f(B*Math.cos(th)),st:s});pl.render();drawMini()}
+  bind(root,{
+    spin:()=>run(async al=>{const B=norm(st.b),b0=ang(st.b);await tw(4200,t=>{const q=b0+2*Math.PI*t;st.b=[B*Math.cos(q),B*Math.sin(q)];update()},al)}),
+    other:btn=>{if(btn.dataset.p===undefined)return;const tgt=ang(st.a)+(+btn.dataset.p)/DEG,B=norm(st.b),b0=ang(st.b);let d=tgt-b0;d=Math.atan2(Math.sin(d),Math.cos(d));
+      run(async al=>tw(700,t=>{const q=b0+d*t;st.b=[B*Math.cos(q),B*Math.sin(q)];update()},al))}});
+  update();
+})();
+
+/* =====================================================================
+   Fig. 9 — produsul vectorial 3D
+   ===================================================================== */
+(()=>{const root=$('#fig9'),run=runner();let st={A:3,B:2.5,th:65,order:1,sg:1,pa:1,pc:1};const phi=.15;
+  const v3=new View3D($('canvas',root),draw,{yaw:-2.25,pitch:.4}),viewRun=runner();
+  function vecs(){const t=st.th/DEG;return {a:[st.A*Math.cos(phi),st.A*Math.sin(phi),0],b:[st.B*Math.cos(phi+t),st.B*Math.sin(phi+t),0]}}
+  function draw(v){const {a,b}=vecs(),O=[0,0,0],c=cross(a,b),cz=c[2]*.5*st.sg*st.pc,t=st.th/DEG;
+    v.grid(4);v.axes(4.4);
+    v.poly([O,a,add(a,b),b],COL.c,.16,COL.c,{dash:[4,4]});
+    // arcul de rotație (de la primul factor spre al doilea)
+    if(st.pa>0&&t>.05){const r=1.15,pts=[];const s0=st.order>0?phi:phi+t,dir=st.order>0?1:-1;for(let i=0;i<=40;i++){const q=s0+dir*t*st.pa*i/40;pts.push([r*Math.cos(q),r*Math.sin(q),0])}v.path(pts,COL.o,{w:2,head:true})}
+    v.arrow(O,a,COL.a,{w:3,label:'a'});v.arrow(O,b,COL.b,{w:3,label:'b'});
+    if(Math.abs(cz)>.02){v.arrow(O,[0,0,cz],COL.c,{w:3.6,label:st.order>0?'a × b':'b × a',size:20});
+      const s=.32*Math.sign(cz),ua=mul(a,.32/norm(a));v.path([ua,add(ua,[0,0,s]),[0,0,s]],COL.r,{w:1})}
+    if(st.pc>=1&&st.pa>=1)v.text('S = |a × b|',mul(add(a,b),.5),{color:COL.c,font:'italic 600 14px "Source Serif 4", serif',dy:4});
+  }
+  function update(){const {a,b}=vecs(),c=mul(cross(a,b),st.order);out(root,{name:st.order>0?`${V('a')} × ${V('b')}`:`${V('b')} × ${V('a')} = −${V('a')} × ${V('b')}`,c:fv(c),cm:f(st.A*st.B*Math.sin(st.th/DEG)),S:f(norm(c))+' u²'});
+    setSlider(root,'th',st.th,st.th+'°');setSlider(root,'A',st.A,f(st.A,1));setSlider(root,'B',st.B,f(st.B,1));v3.render()}
+  sliders(root,(k,val)=>{run.cancel();st.sg=st.order;st.pa=1;st.pc=1;st[k]=val;update()});
+  bind(root,{toggle:(k,on)=>{if(k==='auto')v3.setAuto(on)},
+    screw:()=>run(async al=>{st.sg=st.order;st.pa=0;st.pc=0;v3.render();if(!await wait(250,al))return;if(!await tw(1300,t=>{st.pa=t;v3.render()},al))return;await tw(1000,t=>{st.pc=t;v3.render()},al)}),
+    swap:()=>run(async al=>{st.pa=1;st.pc=1;const from=st.sg,to=-from;st.order=-st.order;update();await tw(1100,t=>{st.sg=lerp(from,to,t);v3.render()},al)}),
+    view:()=>viewRun(async al=>{const y0=v3.yaw,p0=v3.pitch;let ty=v3.yaw0;while(ty-y0>Math.PI)ty-=2*Math.PI;while(y0-ty>Math.PI)ty+=2*Math.PI;await tw(800,t=>{v3.yaw=lerp(y0,ty,t);v3.pitch=lerp(p0,v3.pitch0,t);v3.render()},al)})});
+  update();
+})();
+
+/* =====================================================================
+   Fig. 10 — produsul mixt
+   ===================================================================== */
+(()=>{const root=$('#fig10'),run=runner();let st={be:55,ph:40,p:3};const a=[3.2,-.4,0],b=[.6,2.7,0],C=2.7;
+  const v3=new View3D($('canvas',root),draw,{yaw:-2.3,pitch:.36,cy:.62});
+  const cv=()=>{const be=st.be/DEG,ph=st.ph/DEG;return [C*Math.cos(be)*Math.cos(ph),C*Math.cos(be)*Math.sin(ph),C*Math.sin(be)]};
+  function draw(v){const c=cv(),O=[0,0,0],ab=add(a,b),ac=add(a,c),bc=add(b,c),abc=add(ab,c);
+    v.grid(4);v.axes(4.4);
+    const seg=(p,q,t,col,o)=>{if(t>0)v.line(p,add(p,mul(sub(q,p),t)),col,o)};
+    const t1=clamp(st.p-1,0,1),t2=clamp(st.p-2,0,1);
+    if(st.p>=3){v.poly([O,a,ab,b],COL.b,.14);v.poly([c,ac,abc,bc],COL.c,.08);v.poly([O,a,ac,c],COL.o,.05);v.poly([O,b,bc,c],COL.o,.05)}
+    else v.poly([O,a,ab,b],COL.b,.14*t1);
+    const eo={w:1.4,alpha:.75};
+    [[a,ab],[b,ab]].forEach(([p,q])=>seg(p,q,t1,COL.b,eo));
+    [[a,ac],[c,ac],[b,bc],[c,bc]].forEach(([p,q])=>seg(p,q,t1,COL.r,{w:1.1,alpha:.55}));
+    [[ab,abc],[ac,abc],[bc,abc]].forEach(([p,q])=>seg(p,q,t2,COL.r,{w:1.1,alpha:.55}));
+    // înălțimea
+    if(st.p>=3&&Math.abs(c[2])>.05){v.line(c,[c[0],c[1],0],COL.plum,{dash:[4,4],w:1.4});v.text('h',[c[0],c[1],c[2]/2],{dx:12,color:COL.plum,font:'italic 600 16px "Source Serif 4", serif'})}
+    const k=clamp(st.p,0,1);
+    v.arrow(O,mul(a,k),COL.a,{w:3,label:'a'});v.arrow(O,mul(b,k),COL.b,{w:3,label:'b'});v.arrow(O,mul(c,k),COL.c,{w:3,label:'c'});
+  }
+  function update(){const c=cv(),mx=dot(a,cross(b,c)),S=norm(cross(a,b)),h=Math.abs(c[2]);
+    out(root,{mx:f(mx),S:f(S)+' u²',h:f(h),V:f(S*h)+' u³',st:Math.abs(mx)<.02?'<span style="color:var(--o)">Produs mixt nul → vectorii sunt coplanari, volumul este 0.</span>':mx>0?'Triplet <b>drept</b> (orientat după regula burghiului) → produs mixt pozitiv.':'<span style="color:var(--a)">Triplet <b>stâng</b> (c sub planul lui a și b) → produs mixt negativ.</span>'});
+    setSlider(root,'be',st.be,st.be+'°');setSlider(root,'ph',st.ph,st.ph+'°');v3.render()}
+  sliders(root,(k,val)=>{run.cancel();st[k]=val;st.p=3;update()});
+  bind(root,{toggle:(k,on)=>{if(k==='auto')v3.setAuto(on)},
+    build:()=>run(async al=>{st.p=0;v3.render();if(!await wait(200,al))return;for(let i=0;i<3;i++)if(!await tw(850,t=>{st.p=i+t;v3.render()},al))return}),
+    flat:()=>run(async al=>{st.p=3;const from=st.be,to=from===0?55:0;await tw(1200,t=>{st.be=Math.round(lerp(from,to,t));update()},al)})});
+  update();
+})();
+
+/* =====================================================================
+   Fig. 11 — calculatorul vectorial
+   ===================================================================== */
+(()=>{const root=$('#calc'),fig=$('#fig11'),outEl=$('#calcOut');let show={sum:true,cr:true,cc:false},S={a:[2,1,0],b:[1,3,1],c:[0,1,2],k:2};
+  const v3=new View3D($('canvas',fig),draw,{yaw:-2.25,pitch:.38,auto:true,cy:.58});
+  function draw(v){const {a,b,c}=S,list=[a,b];if(show.sum)list.push(add(a,b));if(show.cr)list.push(cross(a,b));if(show.cc)list.push(c);
+    const m=Math.max(1e-9,...list.map(norm)),sc=4/m,O=[0,0,0];v.grid(4);v.axes(4.4);
+    if(norm(cross(a,b))>1e-9)v.poly([O,mul(a,sc),mul(add(a,b),sc),mul(b,sc)],COL.o,.1,COL.o,{dash:[3,4]});
+    if(show.sum)v.arrow(O,mul(add(a,b),sc),COL.r,{w:3,label:'a + b'});
+    v.arrow(O,mul(a,sc),COL.a,{w:3,label:'a'});v.arrow(O,mul(b,sc),COL.b,{w:3,label:'b'});
+    if(show.cr&&norm(cross(a,b))>1e-9)v.arrow(O,mul(cross(a,b),sc),COL.c,{w:3.4,label:'a × b'});
+    if(show.cc)v.arrow(O,mul(c,sc),COL.teal,{w:2.6,label:'c'});
+    txt(v.ctx,'scară 1 : '+f(1/sc,2),v.w-70,v.h-18,{font:'500 11px "JetBrains Mono", monospace',color:COL.muted});
+  }
+  function read(){const g=k=>{const x=parseFloat(root.querySelector(`[data-c="${k}"]`).value);return isFinite(x)?x:0};
+    S={a:[g('ax'),g('ay'),g('az')],b:[g('bx'),g('by'),g('bz')],c:[g('cx'),g('cy'),g('cz')],k:g('k')}}
+  function update(){read();const {a,b,c,k}=S,A=norm(a),B=norm(b),ab=dot(a,b),th=A&&B?Math.acos(clamp(ab/(A*B),-1,1))*DEG:NaN;
+    const rows=[
+      [`${V('a')} + ${V('b')}`,fv(add(a,b))],[`${V('a')} − ${V('b')}`,fv(sub(a,b))],
+      [`k·${V('a')}`,fv(mul(a,k))],[`|${V('a')}| ; |${V('b')}|`,f(A)+' ; '+f(B)],
+      [`versorul â`,A?fv(mul(a,1/A),3):'nedefinit'],[`unghiul θ(${V('a')}, ${V('b')})`,isFinite(th)?f(th,2)+'°':'nedefinit'],
+      [`${V('a')} · ${V('b')}`,f(ab)],[`pr<sub>b</sub> ${V('a')} = ${V('a')}·${V('b')}/b`,B?f(ab/B):'nedefinit'],
+      [`${V('a')} × ${V('b')}`,fv(cross(a,b))],[`|${V('a')} × ${V('b')}| (arie)`,f(norm(cross(a,b)))],
+      [`(${V('a')}, ${V('b')}, ${V('c')}) (volum cu semn)`,f(dot(a,cross(b,c)))],[`${V('a')} × (${V('b')} × ${V('c')})`,fv(cross(a,cross(b,c)))],
+      [`verificare: ${V('b')}(${V('a')}·${V('c')}) − ${V('c')}(${V('a')}·${V('b')})`,fv(sub(mul(b,dot(a,c)),mul(c,ab))),true],
+      [`relația dintre ${V('a')} și ${V('b')}`,`<span style="font-family:var(--body)">${!A||!B?'un vector este nul':Math.abs(ab)<1e-9?'perpendiculari (a·b = 0)':norm(cross(a,b))<1e-9?'coliniari (a×b = 0)':'în poziție oarecare'}</span>`,true]
+    ];
+    outEl.innerHTML=rows.map(([k,v,full])=>`<div${full?' class="full"':''}><dt>${k}</dt><dd>${v}</dd></div>`).join('');v3.render()}
+  root.addEventListener('input',update);
+  const setV=(o)=>{for(const k in o)root.querySelector(`[data-c="${k}"]`).value=o[k];update()};
+  bind(root,{rand:()=>{const r=()=>Math.round(Math.random()*8-4);const o={};['ax','ay','az','bx','by','bz','cx','cy','cz'].forEach(k=>o[k]=r());o.k=[-2,-1,.5,2,3][Math.floor(Math.random()*5)];setV(o)},
+    ortho:()=>setV({ax:1,ay:0,az:0,bx:0,by:1,bz:0,cx:0,cy:0,cz:1,k:2})});
+  bind(fig,{toggle:(k,on)=>{if(k==='auto')v3.setAuto(on);else{show[k]=on;v3.render()}}});
+  update();
+})();
+
+/* =====================================================================
+   Test
+   ===================================================================== */
+(()=>{const Q=[
+  {q:'Doi vectori perpendiculari au modulele 3 și 4. Modulul rezultantei lor este:',o:['7','5','1','12'],c:1,e:'Pentru α = 90°, R = √(a² + b²) = √(9 + 16) = 5.'},
+  {q:'Care dintre următoarele mărimi este vectorială?',o:['Masa','Temperatura','Forța','Lucrul mecanic'],c:2,e:'Forța are modul, direcție și sens. Lucrul mecanic, deși calculat dintr-un produs de vectori, este un scalar.'},
+  {q:'Rezultanta a două forțe de 6 N și 8 N poate avea orice valoare din intervalul:',o:['[6 N, 8 N]','[0 N, 14 N]','[2 N, 14 N]','[8 N, 14 N]'],c:2,e:'|a − b| ≤ R ≤ a + b, deci 2 N ≤ R ≤ 14 N.'},
+  {q:'Produsul scalar a doi vectori nenuli este zero atunci când vectorii sunt:',o:['paraleli','perpendiculari','de sens opus','egali'],c:1,e:'a·b = ab cos 90° = 0 — aceasta este condiția de perpendicularitate.'},
+  {q:'Dacă k = −2, vectorul k·a are:',o:['modul dublu și același sens','modul înjumătățit și sens opus','modul dublu și sens opus','altă direcție'],c:2,e:'|k·a| = |k|·a = 2a, iar k < 0 inversează sensul. Direcția rămâne aceeași.'},
+  {q:'Produsul vectorial b × a este egal cu:',o:['a × b','−(a × b)','a · b','0'],c:1,e:'Produsul vectorial este anticomutativ: b × a = −(a × b).'},
+  {q:'Modulul |a × b| reprezintă geometric:',o:['proiecția lui a pe b','aria paralelogramului construit pe a și b','volumul unui paralelipiped','perimetrul triunghiului'],c:1,e:'|a × b| = ab sin θ = aria paralelogramului.'},
+  {q:'Pe un plan înclinat de unghi α, componenta greutății paralelă cu planul este:',o:['mg cos α','mg tg α','mg sin α','mg'],c:2,e:'G_t = mg sin α; componenta normală este G_n = mg cos α.'}
+];
+  const box=$('#quiz');let score=0,answered=0;
+  function render(){score=0;answered=0;box.innerHTML=Q.map((x,i)=>`<div class="q" data-i="${i}"><div class="qn">ÎNTREBAREA ${i+1} / ${Q.length}</div><h4>${x.q}</h4><div class="opts">${x.o.map((o,j)=>`<button data-j="${j}"><b>${'ABCD'[j]}</b>${o}</button>`).join('')}</div><div class="exp">${x.e}</div></div>`).join('');upd()}
+  function upd(){$('#scoreTxt').textContent=`${score} / ${Q.length}`;$('#scoreBar').style.width=(score/Q.length*100)+'%'}
+  box.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const q=b.closest('.q'),i=+q.dataset.i,j=+b.dataset.j;
+    $$('button',q).forEach((x,k)=>{x.disabled=true;if(k===Q[i].c)x.classList.add('ok')});if(j!==Q[i].c)b.classList.add('bad');else score++;q.classList.add('done');answered++;upd();
+    if(answered===Q.length)$('#scoreTxt').textContent=`${score} / ${Q.length} — ${score===Q.length?'excelent!':score>=6?'foarte bine!':score>=4?'bine, mai exersează.':'reia lecția.'}`});
+  $('#quizReset').addEventListener('click',render);render();
+})();
+
+/* =====================================================================
+   Fundalul eroului: câmpul electric al unui dipol
+   ===================================================================== */
+(()=>{const c=$('#heroField'),ctx=c.getContext('2d'),hero=$('.hero');let w=0,h=0,vis=true,mouse=null,raf=null;const t0=performance.now();
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function resize(){const r=c.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);w=r.width;h=r.height;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0);frame(performance.now(),true)}
+  new ResizeObserver(resize).observe(c);
+  new IntersectionObserver(es=>{vis=es[0].isIntersecting;if(vis)loop()}).observe(hero);
+  hero.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();mouse=[e.clientX-r.left,e.clientY-r.top]});
+  hero.addEventListener('pointerleave',()=>mouse=null);
+  let m2=null;
+  function frame(now,once){const t=(now-t0)/1000;ctx.clearRect(0,0,w,h);
+    const q1=[w*(.66+.07*Math.cos(t*.21)),h*(.42+.14*Math.sin(t*.29))];
+    const auto=[w*(.84+.06*Math.cos(t*.17+2)),h*(.64+.12*Math.sin(t*.23+1))];
+    const tgt=mouse||auto;m2=m2?[lerp(m2[0],tgt[0],.08),lerp(m2[1],tgt[1],.08)]:tgt.slice();
+    const Q=[[q1,1],[m2,-1]],sp=w<700?30:36;
+    for(let y=sp/2;y<h;y+=sp)for(let x=sp/2;x<w;x+=sp){
+      let ex=0,ey=0;for(const [[qx,qy],q] of Q){const dx=x-qx,dy=y-qy,r2=dx*dx+dy*dy+120,r=Math.sqrt(r2);ex+=q*dx/(r2*r);ey+=q*dy/(r2*r)}
+      const m=Math.hypot(ex,ey);if(!m)continue;const s=clamp((Math.log10(m)+5.7)/2.5,0,1);
+      const fade=clamp((x/w-.3)/.35,0,1)*.85+.15;const L=sp*.62*(.45+.55*s),ux=ex/m,uy=ey/m;
+      const x1=x-ux*L/2,y1=y-uy*L/2,x2=x+ux*L/2,y2=y+uy*L/2;
+      const r=Math.round(lerp(31,200,s)),g=Math.round(lerp(90,64,s)),b=Math.round(lerp(138,42,s));
+      ctx.strokeStyle=ctx.fillStyle=`rgba(${r},${g},${b},${(.18+.62*s)*fade})`;ctx.lineWidth=1.3;
+      ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2-ux*3,y2-uy*3);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-ux*6-uy*2.8,y2-uy*6+ux*2.8);ctx.lineTo(x2-ux*6+uy*2.8,y2-uy*6-ux*2.8);ctx.fill();
+    }
+    for(const [[qx,qy],q] of Q){const g=ctx.createRadialGradient(qx,qy,0,qx,qy,46);g.addColorStop(0,q>0?'rgba(200,64,42,.28)':'rgba(31,90,138,.28)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(qx,qy,46,0,7);ctx.fill();
+      ctx.beginPath();ctx.arc(qx,qy,11,0,7);ctx.fillStyle=q>0?COL.a:COL.b;ctx.fill();ctx.strokeStyle='#fbf8f1';ctx.lineWidth=2;ctx.stroke();
+      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(qx-5,qy);ctx.lineTo(qx+5,qy);if(q>0){ctx.moveTo(qx,qy-5);ctx.lineTo(qx,qy+5)}ctx.stroke()}
+  }
+  function loop(){if(raf||reduce)return;const step=now=>{raf=null;if(!vis)return;frame(now);raf=requestAnimationFrame(step)};raf=requestAnimationFrame(step)}
+  loop();
+})();
+
+/* =====================================================================
+   Navigație, progres, apariții
+   ===================================================================== */
+(()=>{const links=$$('.toc a'),map=new Map(links.map(a=>[a.getAttribute('href').slice(1),a]));
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.remove('active'));map.get(e.target.id)?.classList.add('active')}}),{rootMargin:'-45% 0px -50% 0px'});
+  $$('section.sec').forEach(s=>io.observe(s));
+  const rv=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');rv.unobserve(e.target)}}),{threshold:.08});
+  $$('.rv').forEach(el=>rv.observe(el));
+  const bar=$('#progress');addEventListener('scroll',()=>{const d=document.documentElement;bar.style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%'},{passive:true});
+})();
+
+/* KaTeX + re-desenare după încărcarea fonturilor */
+addEventListener('load',()=>{if(window.renderMathInElement)renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});ALL.forEach(x=>x.resize())});
+document.fonts&&document.fonts.ready.then(()=>ALL.forEach(x=>x.render()));
+</script>
 </body>
 </html>
