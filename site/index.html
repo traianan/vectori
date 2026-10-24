@@ -110,6 +110,9 @@ main{min-width:0}
 .fig{position:sticky;top:28px;background:var(--card);border:1px solid var(--rule);box-shadow:0 1px 0 rgba(0,0,0,.03),0 24px 50px -30px rgba(40,30,10,.35)}
 .fig-h{display:flex;justify-content:space-between;align-items:baseline;padding:12px 18px;border-bottom:1px solid var(--rule);gap:12px}
 .fig-h b{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+.fig-h b .vec,.fig-h b .sym{text-transform:none;letter-spacing:0;font-family:'Source Serif 4',Georgia,serif;font-size:14.5px;font-weight:600;color:var(--ink)}
+.fig-h b .vec{margin:0 .04em}
+.fig-h b .fx{white-space:nowrap;font:inherit;color:inherit;text-align:inherit}
 .fig-h span{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:right}
 .fig canvas{display:block;width:100%;height:430px;touch-action:none}
 .fig canvas.h3d{height:470px}
@@ -128,6 +131,8 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .ro dt{font-size:13px;color:var(--muted);font-style:italic}
 .ro dd{font-family:var(--mono);font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ro .wide{grid-column:1/-1}
+#fig5 .ro{grid-template-columns:minmax(0,1.55fr) minmax(0,.85fr) minmax(0,.9fr) minmax(0,1.3fr)}
+#fig5 .ro div{padding-left:14px;padding-right:12px}
 .ro .w2{grid-column:span 2}
 .ro dd.txt{font-family:var(--body);font-weight:600;white-space:normal;font-size:15.5px}
 .hint{font-family:var(--mono);font-size:11px;color:var(--muted);padding:9px 18px;border-top:1px solid var(--rule);display:flex;gap:8px;align-items:center}
@@ -204,6 +209,7 @@ footer a{color:var(--muted)}
   .hero-caption{display:none}
 }
 @media (max-width:640px){
+  #fig5 .ro{grid-template-columns:repeat(2,minmax(0,1fr))}
   body{font-size:17px}
   .sec-head{grid-template-columns:1fr}
   .num{font-size:72px;margin-bottom:12px}
@@ -384,7 +390,7 @@ footer a{color:var(--muted)}
       </div>
     </div>
     <div class="rv d1"><figure class="fig" id="fig3">
-      <div class="fig-h"><b>Fig. 3 — Rezultanta R = a + b</b><span>trage de vârfurile vectorilor</span></div>
+      <div class="fig-h"><b>Fig. 3 — Rezultanta <span class="fx"><span class="vec">R</span> = <span class="vec">a</span> + <span class="vec">b</span></span></b><span>trage de vârfurile vectorilor</span></div>
       <canvas></canvas>
       <div class="ctrls">
         <button class="btn sm on" data-mode="par">Paralelogram</button>
@@ -453,7 +459,7 @@ footer a{color:var(--muted)}
       </div>
     </div>
     <div class="rv d1"><figure class="fig" id="fig5">
-      <div class="fig-h"><b>Fig. 5 — d = a − b</b><span>trage de vârfuri</span></div>
+      <div class="fig-h"><b>Fig. 5 — <span class="fx"><span class="vec">d</span> = <span class="vec">a</span> − <span class="vec">b</span></span></b><span>trage de vârfuri</span></div>
       <canvas></canvas>
       <div class="ctrls">
         <button class="btn sm primary" data-act="m1"><svg class="i"><use href="#i-play"/></svg>Metoda a + (−b)</button>
@@ -491,7 +497,7 @@ footer a{color:var(--muted)}
       </div>
     </div>
     <div class="rv d1"><figure class="fig" id="fig6">
-      <div class="fig-h"><b>Fig. 6 — Vectorul k·a</b><span>trage de vârful lui a</span></div>
+      <div class="fig-h"><b>Fig. 6 — Vectorul <span class="fx"><i class="sym">k</i>·<span class="vec">a</span></span></b><span>trage de vârful lui a</span></div>
       <canvas></canvas>
       <div class="sliders"><label class="sl"><span>k</span><input type="range" min="-3" max="3" step="0.1" value="1.5" data-s="k"><output data-so="k">1.5</output></label></div>
       <div class="ctrls">
@@ -569,7 +575,7 @@ footer a{color:var(--muted)}
       </div>
     </div>
     <div class="rv d1"><figure class="fig" id="fig8">
-      <div class="fig-h"><b>Fig. 8 — a · b și proiecția</b><span>trage de vârfuri</span></div>
+      <div class="fig-h"><b>Fig. 8 — <span class="fx"><span class="vec">a</span> · <span class="vec">b</span></span> și proiecția</b><span>trage de vârfuri</span></div>
       <canvas></canvas>
       <canvas class="mini"></canvas>
       <div class="ctrls">
@@ -611,7 +617,7 @@ footer a{color:var(--muted)}
       </div>
     </div>
     <div class="rv d1"><figure class="fig" id="fig9">
-      <div class="fig-h"><b>Fig. 9 — c = a × b (3D)</b><span>trage pentru a roti scena · c la scara 1:2</span></div>
+      <div class="fig-h"><b>Fig. 9 — <span class="fx"><span class="vec">c</span> = <span class="vec">a</span> × <span class="vec">b</span></span> (3D)</b><span>trage pentru a roti scena · c la scara 1:2</span></div>
       <canvas class="h3d"></canvas>
       <div class="sliders">
         <label class="sl"><span>θ</span><input type="range" min="0" max="180" step="1" value="65" data-s="th"><output data-so="th">65°</output></label>
@@ -1070,6 +1076,7 @@ function setSlider(root,key,val,label){const i=root.querySelector(`[data-s="${ke
       if(st.p>0){const nb=rot2(b,Math.PI*t1),o=mul(a,t2);p.arrow(o,add(o,nb),COL.plum,{w:2.8,label:t1>.5?'− b':'',side:1});
         if(t2>=1)p.poly([O,a,d],COL.o,.08)}
       if(t3>0)p.arrow(O,mul(d,t3),COL.r,{w:3.6,label:'d',size:21,side:-1});
+      if(t3>=1){p.arrow(b,a,COL.r,{w:2,alpha:.45,dash:[6,4],label:'a − b',side:-1})}
     }else{const t=clamp(st.p,0,1);
       if(t>0){p.poly([O,b,a],COL.o,.08*t);p.arrow(b,add(b,mul(d,t)),COL.r,{w:3.6,label:'a − b',side:-1});
         if(t>=1)p.arrow(O,d,COL.r,{w:2,alpha:.4,dash:[6,4],label:'d',side:1})}}
