@@ -1,6 +1,7 @@
 node_modules/
 .*
 !.gitignore
+!.github/
 openkbs.local.json
 
 # openkbs: skills and AI instructions travel with the repo
